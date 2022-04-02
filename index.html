@@ -7,12 +7,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="resources/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: sans-serif;}
 body, html {
   height: 100%;
-  color: #777;
+  color: #444;
   line-height: 1.8;
 }
 
@@ -60,14 +59,15 @@ body, html {
 <div class="w3-top">
   <div class="w3-bar w3-text-white" id="myNavbar">
     <a href="#home" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">STARTSEITE</a>
-    <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-hide-medium"><i class="fa fa-users"></i> ÜBER UNS</a>
-    <a href="#donate" class="w3-bar-item w3-button w3-hide-small w3-hide-medium"><i class="fa fa-money"></i> SPENDEN</a>
-    <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hide-medium"><i class="fa fa-envelope"></i> KONTAKT</a>
+    <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">ÜBER UNS</a>
+    <a href="#donate" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">SPENDEN</a>
+    <a href="#report" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">JAHRESBERICHT</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">KONTAKT</a>
     <a href="https://www.facebook.com/bergwachtramsau" class="w3-bar-item w3-button w3-right w3-hover-red" target="_blank">
-      <i class="fa fa-facebook-official w3-hover-opacity"> FACEBOOK</i>
+      <img alt="facebook" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCA1MCA1MCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij4gICAgPHBhdGggZD0iTTQxLDRIOUM2LjI0LDQsNCw2LjI0LDQsOXYzMmMwLDIuNzYsMi4yNCw1LDUsNWgzMmMyLjc2LDAsNS0yLjI0LDUtNVY5QzQ2LDYuMjQsNDMuNzYsNCw0MSw0eiBNMzcsMTloLTJjLTIuMTQsMC0zLDAuNS0zLDIgdjNoNWwtMSw1aC00djE1aC01VjI5aC00di01aDR2LTNjMC00LDItNyw2LTdjMi45LDAsNCwxLDQsMVYxOXoiPjwvcGF0aD48L3N2Zz4="/> FACEBOOK
     </a>
     <a href="https://www.instagram.com/bergwachtramsau" class="w3-bar-item w3-button w3-right w3-hover-red" target="_blank">
-      <i class="fa fa-instagram w3-hover-opacity"> INSTAGRAM</i>
+      <img alt="instagram" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCAyNCAyNCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij4gICAgPHBhdGggZD0iTSA4IDMgQyA1LjI0MyAzIDMgNS4yNDMgMyA4IEwgMyAxNiBDIDMgMTguNzU3IDUuMjQzIDIxIDggMjEgTCAxNiAyMSBDIDE4Ljc1NyAyMSAyMSAxOC43NTcgMjEgMTYgTCAyMSA4IEMgMjEgNS4yNDMgMTguNzU3IDMgMTYgMyBMIDggMyB6IE0gOCA1IEwgMTYgNSBDIDE3LjY1NCA1IDE5IDYuMzQ2IDE5IDggTCAxOSAxNiBDIDE5IDE3LjY1NCAxNy42NTQgMTkgMTYgMTkgTCA4IDE5IEMgNi4zNDYgMTkgNSAxNy42NTQgNSAxNiBMIDUgOCBDIDUgNi4zNDYgNi4zNDYgNSA4IDUgeiBNIDE3IDYgQSAxIDEgMCAwIDAgMTYgNyBBIDEgMSAwIDAgMCAxNyA4IEEgMSAxIDAgMCAwIDE4IDcgQSAxIDEgMCAwIDAgMTcgNiB6IE0gMTIgNyBDIDkuMjQzIDcgNyA5LjI0MyA3IDEyIEMgNyAxNC43NTcgOS4yNDMgMTcgMTIgMTcgQyAxNC43NTcgMTcgMTcgMTQuNzU3IDE3IDEyIEMgMTcgOS4yNDMgMTQuNzU3IDcgMTIgNyB6IE0gMTIgOSBDIDEzLjY1NCA5IDE1IDEwLjM0NiAxNSAxMiBDIDE1IDEzLjY1NCAxMy42NTQgMTUgMTIgMTUgQyAxMC4zNDYgMTUgOSAxMy42NTQgOSAxMiBDIDkgMTAuMzQ2IDEwLjM0NiA5IDEyIDkgeiI+PC9wYXRoPjwvc3ZnPg=="/> INSTAGRAM
     </a>
   </div>
 </div>
@@ -82,12 +82,19 @@ body, html {
 <!-- Container (About Section) -->
 <div class="w3-content w3-container w3-padding-64" id="about">
   <h3 class="w3-center">ÜBER UNS</h3>
-  <p>
+  <p align="justify">
     Unser Einsatzgebiet erstreckt sich zum Großteil über das Gebiet des Nationalparks Berchtesgaden mit Watzmann, Hochkalter, Blaueis und Reiteralpe. Außerdem sind wir für Teile des Lattengebirges, die Mordau-Alm und das Hochschwarzeck verantwortlich. Im Winter betreuen wir das Familienskigebiet Hochschwarzeck.
   </p>
-  <p>
+  <p align="justify">
     Wir sind ein Team von 52 aktiven Bergwachtfrauen und -männern, die sich ehrenamtlich für die Bergrettung in Bayern engagieren. Seit der Gründung unserer Bereitschaft im Jahr 1945 ist es unsere Aufgabe, Menschen aus Bergnot zu retten, das heißt Wanderern, Ski- und Schlittenfahrern sowie Kletterern bei Notfällen im unwegsamen Gelände zu helfen.
   </p>
+</div>
+
+<!-- Second Parallax Image -->
+<div class="bgimg-2 w3-display-container w3-opacity-min">
+  <div class="w3-display-middle">
+    <span class="w3-xxlarge w3-text-white w3-wide"></span>
+  </div>
 </div>
 
 <div class="w3-row w3-center w3-dark-grey w3-padding-16">
@@ -109,15 +116,15 @@ body, html {
   </div>
 </div>
 
-<!-- Second Parallax Image -->
-<div class="bgimg-2 w3-display-container w3-opacity-min">
+<!-- Third Parallax Image with Contact Text -->
+<div class="bgimg-3 w3-display-container w3-opacity-min" id="donate">
   <div class="w3-display-middle">
-    <span class="w3-xxlarge w3-text-white w3-wide"></span>
+     <span class="w3-xxlarge w3-text-white w3-wide">Spenden</span>
   </div>
 </div>
 
 <!-- Container (Donate Section) -->
-<div class="w3-content w3-container w3-padding-64" id="donate">
+<div class="w3-content w3-container w3-padding-64">
   <h3 class="w3-center">SPENDEN</h3>
 
   <p class="w3-center"><em>Unterstützen Sie die Bergwacht Ramsau mit Ihrer Spende oder langfristig als Förderer.<br>
@@ -125,7 +132,7 @@ body, html {
 
   <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
   <div class="w3-row-padding w3-center">
-    <div class="w3-col m4">
+    <div class="w3-col m6">
       <p>
         Hier finden Sie den Antrag zum Förderer der Bergwacht Ramsau:
         </p>
@@ -135,11 +142,7 @@ body, html {
       </p>
     </div>
 
-    <div class="w3-col m4">
-      <a href="download/Jahresbericht.pdf" target="_blank"><img src="Bilder/Jahresbericht.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht"></a>
-    </div>
-
-    <div class="w3-col m4">
+    <div class="w3-col m6">
       <p>
         BANK: Volks- u. Raiffeisenbank BGL e.G.<br>
         BIC: GENODEF1BGL<br>
@@ -150,22 +153,54 @@ body, html {
 </div>
 
 <!-- Third Parallax Image with Contact Text -->
-<div class="bgimg-3 w3-display-container w3-opacity-min">
+<div class="bgimg-3 w3-display-container w3-opacity-min" id="report">
+  <div class="w3-display-middle">
+     <span class="w3-xxlarge w3-text-white w3-wide">Jahresbericht</span>
+  </div>
+</div>
+
+<!-- Container (Donate Section) -->
+<div class="w3-content w3-container w3-padding-64">
+  <h3 class="w3-center">JAHRESBERICHT</h3>
+
+  <p class="w3-center"><em>Hier können Sie die Jahresberichte der letzten Jahre ansehen.<br>
+    Zum öffnen klicken Sie auf das Cover des jeweiligen Jahresberichts.</em></p><br>
+
+  <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
+  <div class="w3-row-padding w3-center">
+
+    <div class="w3-col m4">
+      <a href="download/JahresberichtBW2020.pdf" target="_blank"><img src="Bilder/JahresberichtBW2020.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Bayern 2020"></a>
+    </div>
+
+    <div class="w3-col m4">
+      <a href="download/JahresberichtBW2021.pdf" target="_blank"><img src="Bilder/JahresberichtBW2021.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Bayern 2021"></a>
+    </div>
+
+    <div class="w3-col m4">
+      <a href="download/Jahresbericht2021.pdf" target="_blank"><img src="Bilder/Jahresbericht2021.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Ramsau 2021"></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Third Parallax Image with Contact Text -->
+<div class="bgimg-3 w3-display-container w3-opacity-min" id="contact">
   <div class="w3-display-middle">
      <span class="w3-xxlarge w3-text-white w3-wide">Kontakt</span>
   </div>
 </div>
 
 <!-- Container (Contact Section) -->
-<div class="w3-content w3-container w3-padding-64" id="contact">
+<div class="w3-content w3-container w3-padding-64">
   <h3 class="w3-center">KONTAKT</h3>
 
   <div class="w3-row w3-padding-32 w3-section">
       <div class="w3-large w3-margin-bottom">
-        <i class="fa fa-ambulance fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> Bergwacht Ramsau<br>
-        <i class="fa fa-map-marker fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> Im Tal 2, 83486 Ramsau<br>
-        <a href="tel:+498657202"><i class="fa fa-phone fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i></a> Telefon: <a href="tel:+498657202">+49 8657 202</a><br>
-        <a href="mailto:info@bergwacht-ramsau.de"><i class="fa fa-envelope fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i></a> E-Mail: <a href="mailto:info@bergwacht-ramsau.de">info@bergwacht-ramsau.de</a><br>
+        Bergwacht Ramsau<br>
+        Im Tal 2, 83486 Ramsau<br>
+        Telefon: <a href="tel:+498657202">+49 8657 202</a><br>
+        E-Mail: <a href="mailto:info@bergwacht-ramsau.de">info@bergwacht-ramsau.de</a><br>
       </div>
     </div>
   </div>
