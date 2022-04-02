@@ -66,8 +66,9 @@ body, html {
     <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> ÜBER UNS</a>
     <a href="#donate" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-th"></i> SPENDEN</a>
     <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> KONTAKT</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
-      <i class="fa fa-search"></i>
+    <a href="#" class="w3-bar-item w3-button w3-right w3-hover-red">
+      <i class="fa fa-facebook-official w3-hover-opacity"></i>
+      <i class="fa fa-instagram w3-hover-opacity"></i>
     </a>
   </div>
 
@@ -76,7 +77,6 @@ body, html {
     <a href="#about" class="w3-bar-item w3-button" onclick="toggleFunction()">ÜBER UNS</a>
     <a href="#donate" class="w3-bar-item w3-button" onclick="toggleFunction()">SPENDEN</a>
     <a href="#contact" class="w3-bar-item w3-button" onclick="toggleFunction()">KONTAKT</a>
-    <a href="#" class="w3-bar-item w3-button">SEARCH</a>
   </div>
 </div>
 
@@ -195,13 +195,6 @@ body, html {
 </footer>
  
 <script>
-// Modal Image Gallery
-function onClick(element) {
-  document.getElementById("img01").src = element.src;
-  document.getElementById("modal01").style.display = "block";
-  var captionText = document.getElementById("caption");
-  captionText.innerHTML = element.alt;
-}
 
 // Change style of navbar on scroll
 window.onscroll = function() {myFunction()};
