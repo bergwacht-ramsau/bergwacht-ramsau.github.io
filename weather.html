@@ -537,36 +537,36 @@
                             element.appendChild(para);
                         }
                     }
-                    for (let i = 0; i < problemsAndAspects.length; i++) {
+                    problemsAndAspects.forEach((value,key) => {
                         const container = document.createElement("div");
                         container.className = "type-aspect";
                         const typeContainer = document.createElement("div");
                         typeContainer.className = "type";
                         const img = document.createElement("img");
-                        img.src = "resources/" + problemsAndAspects[i].type + ".png";
+                        img.src = "resources/" + key + ".png";
                         img.width = 100;
-                        img.alt = problemsAndAspects[i].type;
+                        img.alt = key;
                         typeContainer.appendChild(img)
                         container.appendChild(typeContainer);
                         const aspectContainer = document.createElement("div");
                         aspectContainer.className = "aspect";
-                        for (let j = 0; j < problemsAndAspects[i].validAspects.length; j++) {
+                        for (let j = 0; j < value.length; j++) {
                             const aspect = document.createElement("img");
-                            aspect.src = "resources/exposition_" + problemsAndAspects[i].validAspects[j].toLowerCase() + ".png";
+                            aspect.src = "resources/exposition_" + value[j].toLowerCase() + ".png";
                             aspect.width = 100;
-                            aspect.alt = problemsAndAspects[i].validAspects[j];
+                            aspect.alt = value[j];
                             aspect.className = "aspect-img"
                             aspectContainer.appendChild(aspect);
                         }
                         const rose = document.createElement("img");
                         rose.src = "resources/exposition_bg.png";
                         rose.width = 100;
-                        rose.alt = problemsAndAspects[i].validAspects.toString();
+                        rose.alt = value.toString();
                         rose.className = "aspect-img"
                         aspectContainer.appendChild(rose);
                         container.appendChild(aspectContainer);
                         element.appendChild(container);
-                    }
+                    });
                 }).catch(function (error) {
                     console.log("Fehler: bei Auslesen der XML-Datei " + error);
                 });
@@ -585,7 +585,7 @@
             const tempRatings = generateTempRatings(ratings);
             if (tempRatings.length === 1) {
                 return [{ level: tempRatings[0].level, height: null }];
-            } else if (tempRatings.length > 1) {
+            } else if (tempRatings.length > 1 && tempRatings.some(rating => rating.elevation)) {
                 const hiRatings = tempRatings.filter(rating => rating.elevation.endsWith('Hi'));
                 const loRatings = tempRatings.filter(rating => rating.elevation.endsWith('Lo'));
                 if (hiRatings.length == 1) {
@@ -641,6 +641,12 @@
                     }
                     return [{ level: level, height: height, end: hiRatings[1].end }, { level: level2, height: height2, end: hiRatings[0].end }];
                 }
+            }else if(tempRatings.length > 1){
+            	if (tempRatings[0].end < tempRatings[0].end) {
+                    return [{ level: tempRatings[0].level , height: null, end: tempRatings[0].end }, { level: tempRatings[1].level, height: null, end: tempRatings[1].end }];
+                } else {
+                    return [{ level: tempRatings[1].level , height: null, end: tempRatings[1].end }, { level: tempRatings[0].level, height: null, end: tempRatings[0].end }];
+                }
             }
             return [];
         }
@@ -669,7 +675,7 @@
         }
 
         function getProblemsAndAspects(problems) {
-            let temp = [];
+            let temp = new Map();
             for (let i = 0; i < problems.length; i++) {
                 let end = null;
                 let begin = null;
@@ -684,7 +690,12 @@
                     validAspects.push(problems.item(i).getElementsByTagName('validAspect')[j].attributes['xlink:href']['value'].split("Range_")[1]);
                 }
                 const type = getProblemType(problems.item(i).getElementsByTagName('type')[0].innerHTML);
-                temp.push({ begin: begin, end: end, validAspects: validAspects, type: type });
+                if(temp.has(type)){
+                	tempValidAspects = temp.get(type);
+                	temp.set(type, [...new Set([...tempValidAspects, ...validAspects])]);
+                }else{
+                temp.set(type, validAspects);
+                }
             }
             return temp;
         }
