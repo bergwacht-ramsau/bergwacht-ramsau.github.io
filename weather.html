@@ -697,7 +697,7 @@
                 temp.set(type, validAspects);
                 }
             }
-            return temp;
+            return new Map([...temp.entries()].sort());;
         }
 
         function getProblemType(typeString) {
