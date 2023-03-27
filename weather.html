@@ -344,7 +344,7 @@
             const year = dateTimeArray[2];
             const hour = dateTimeArray[3].split(':')[0];
             const minute = dateTimeArray[3].split(':')[1];
-            return new Date(year, month, day, hour, minute, 0, 0);
+            return new Date(year, month, day, (parseInt(hour) + 1), minute, 0, 0);
         }
 
         function generateMonth(monthString) {
