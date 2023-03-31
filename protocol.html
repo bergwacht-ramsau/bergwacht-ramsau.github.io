@@ -140,7 +140,7 @@
           coordinates["time"] = parseDate(event.originated_at);
           addTableRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
           const coordinatesId = document.getElementById("coordinates");
-          coordinatesId.innerHTML = "Koordinaten: " + + coordinates["latitude"] + " / " + coordinates["longitude"];
+          coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
         }
       }
       else {
