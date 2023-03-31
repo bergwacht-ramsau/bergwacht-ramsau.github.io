@@ -191,7 +191,7 @@
         if(vehicle.statusList){
           vehicle.statusList.forEach(status => {
             if(vehicleStatus[vehicle.name]){
-              if(!vehicleStatus[vehicle.name].includes[status.timestamp]){
+              if(!vehicleStatus[vehicle.name].includes(status.timestamp)){
               vehicleStatus[vehicle.name].push(status.timestamp);
               addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: "+ status.status);
               }
