@@ -217,6 +217,13 @@
       return vehicleStatus;
     }
 
+    function clearProtocol() {
+      if (confirm("Den Einsatz wirklich abschließen?\nAlle Einträge werden gelöscht!")) {
+        window.localStorage.removeItem(extid);
+        window.open('https://office.bergwacht-bayern.de', '_self', '');
+      }
+    }
+
     const jwt = new URLSearchParams(window.location.search).get("jwt");
 
     const extid = new URLSearchParams(window.location.search).get("extid");
@@ -307,7 +314,8 @@
     <div class="content">
       <h1 id="keyword">Einsatzprotokoll:</h1><button onclick="window.print();return false;" class="no-print"
         style="float: right; margin-right: 5%;">Protokoll drucken</button>
-      <h3 id="caller">Rückrufnummer:</h3>
+      <h3 id="caller">Rückrufnummer:</h3><button onclick="clearProtocol()" class="no-print"
+        style="float: right; margin-right: 5%;">Protokoll abschließen</button>
       <h3 id="coordinates">Koordinaten:</h3>
       <h3 id="message">Meldung:</h3>
 
