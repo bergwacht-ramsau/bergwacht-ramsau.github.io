@@ -165,7 +165,7 @@
         caller["time"] = parseDate(event.originated_at);
         addTableRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
         const callerId = document.getElementById("caller");
-        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": " + caller["contact"];
+        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"]+"\">"+caller["contact"]+"</a>";
       }
       return caller;
     }
