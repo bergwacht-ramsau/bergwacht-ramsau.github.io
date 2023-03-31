@@ -219,8 +219,16 @@
 
     function clearProtocol() {
       if (confirm("Den Einsatz wirklich abschließen?\nAlle Einträge werden gelöscht!")) {
-        window.localStorage.removeItem(extid);
-        window.open('https://office.bergwacht-bayern.de', '_self', '');
+        const table = document.getElementById("events-rows");
+        const protocol = [];
+        for (let row of table.rows) {
+          protocol.push({ time: row.cells[0].innerHTML, origin: row.cells[1].innerHTML, message: row.cells[2].innerHTML });
+        }
+        const body = { data: { attributes: { payload: { 'bwb:accounting': { protocol: protocol } } } } }
+        fetch("https://api.services.bergwacht-bayern.org/api/eventhub/alarms/" + extid, { method: "PATCH", headers: { "Content-Type": "application/vnd.api+json", "Accept": "application/vnd.api+json", "Authorization": "Bearer " + jwt }, body: JSON.stringify(body) }).then(response => response.json()).then(data => {
+          console.log(data); window.localStorage.removeItem(extid);
+          window.open('https://office.bergwacht-bayern.de', '_self', '');
+        }).catch(error => { console.log(error); alert("Fehler, bitte erneut versuchen!") });
       }
     }
 
@@ -251,7 +259,6 @@
 
       if (events) {
         const table = document.getElementById("events-rows");
-
         events.forEach(event => {
           handleKeyword(event);
           message = handleMessage(event, table, message);
