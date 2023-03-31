@@ -56,11 +56,11 @@
       const time = document.getElementById("manualTime");
       const from = document.getElementById("manualFrom");
       const message = document.getElementById("manualMessage");
-      let manualRows = window.localStorage.getItem("manualRows") ? JSON.parse(window.localStorage.getItem("manualRows")) : [];
+      let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
       const uuid = crypto.randomUUID();
       addTableRow(table, parseDate(time.value), from.value, message.value, true, uuid);
       manualRows.push({ "time": parseDate(time.value), "from": from.value, "message": message.value, "uuid": uuid });
-      window.localStorage.setItem("manualRows", JSON.stringify(manualRows));
+      window.localStorage.setItem(extid, JSON.stringify(manualRows));
       time.value = "";
       from.value = "";
       message.value = "";
@@ -77,9 +77,9 @@
       time.value = td.getAttribute("time");
       from.value = cells[1].innerHTML;
       message.value = cells[2].innerHTML;
-      let manualRows = JSON.parse(window.localStorage.getItem("manualRows"));
+      let manualRows = JSON.parse(window.localStorage.getItem(extid));
       manualRows = manualRows.filter(row => row.uuid === td.getAttribute("uuid"));
-      window.localStorage.setItem("manualRows", JSON.stringify(manualRows));
+      window.localStorage.setItem(extid, JSON.stringify(manualRows));
       tr.parentNode.removeChild(tr);
     }
 
@@ -185,8 +185,6 @@
 
     const jwt = new URLSearchParams(window.location.search).get("jwt");
 
-    const since = new URLSearchParams(window.location.search).get("since");
-    const replay = new URLSearchParams(window.location.search).get("replay");
     const extid = new URLSearchParams(window.location.search).get("extid");
 
     const socket = new Phoenix.Socket("wss://api.services.bergwacht-bayern.org/socket", {
@@ -201,7 +199,7 @@
     var coordinates = undefined;
     var caller = undefined;
     var vehicles = [];
-    let manualRows = window.localStorage.getItem("manualRows") ? JSON.parse(window.localStorage.getItem("manualRows")) : [];
+    let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
 
     channel.on("events.update", (payload) => {
       console.log("Received", payload);
@@ -226,10 +224,8 @@
       .receive("ok", (resp) => {
         console.log("Joined successfully", resp);
 
-        if (since || replay || extid) {
+        if (extid) {
           channel.push("catchup", {
-            since: since,
-            replay: replay,
             extid: extid
           })
         }
