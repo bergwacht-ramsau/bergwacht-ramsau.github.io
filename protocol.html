@@ -99,6 +99,17 @@
       }
     }
 
+    function handleEnd(event, table, end) {
+      if (end === false) {
+        if (event.payload.data.alarmProtocol && event.payload.data.alarmProtocol.find(status => status.type === "CLOSED")) {
+          const index = event.payload.data.alarmProtocol.findIndex(status => status.type === "CLOSED");
+          addTableRow(table, new Date(event.payload.data.alarmProtocol[index].timestamp), "ILS -> EL", "Einsatz abgeschlossen");
+          end = true;
+        }
+      }
+      return end;
+    }
+
 
     function handleMessage(event, table, message) {
       if (message !== undefined) {
@@ -165,7 +176,7 @@
         caller["time"] = parseDate(event.originated_at);
         addTableRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
         const callerId = document.getElementById("caller");
-        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"]+"\">"+caller["contact"]+"</a>";
+        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
       }
       return caller;
     }
@@ -188,16 +199,16 @@
         return vehicleStatus;
       }
       event.payload.data.vehicleStatusHistory.forEach(vehicle => {
-        if(vehicle.statusList){
+        if (vehicle.statusList) {
           vehicle.statusList.forEach(status => {
-            if(vehicleStatus[vehicle.name]){
-              if(!vehicleStatus[vehicle.name].includes(status.timestamp)){
-              vehicleStatus[vehicle.name].push(status.timestamp);
-              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: "+ status.status);
+            if (vehicleStatus[vehicle.name]) {
+              if (!vehicleStatus[vehicle.name].includes(status.timestamp)) {
+                vehicleStatus[vehicle.name].push(status.timestamp);
+                addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
               }
-            }else{
+            } else {
               vehicleStatus[vehicle.name] = [status.timestamp];
-              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: "+ status.status);
+              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
             }
           })
         }
@@ -222,6 +233,7 @@
     var caller = undefined;
     var vehicles = [];
     var vehicleStatus = {};
+    var end = false;
     let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
 
     channel.on("events.update", (payload) => {
@@ -239,6 +251,7 @@
           caller = handleCaller(event, table, caller);
           vehicles = handleVehicles(event, table, vehicles);
           vehicleStatus = handleVehicleStatus(event, table, vehicleStatus);
+          end = handleEnd(event, table, end);
         });
       }
     });
