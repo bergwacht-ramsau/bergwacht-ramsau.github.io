@@ -183,6 +183,28 @@
       return vehicles;
     }
 
+    function handleVehicleStatus(event, table, vehicleStatus) {
+      if (event.payload.data.vehicleStatusHistory === undefined) {
+        return vehicleStatus;
+      }
+      event.payload.data.vehicleStatusHistory.forEach(vehicle => {
+        if(vehicle.statusList){
+          vehicle.statusList.forEach(status => {
+            if(vehicleStatus[vehicle.name]){
+              if(!vehicleStatus[vehicle.name].includes[status.timestamp]){
+              vehicleStatus[vehicle.name].push(status.timestamp);
+              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: "+ status.status);
+              }
+            }else{
+              vehicleStatus[vehicle.name] = [status.timestamp];
+              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: "+ status.status);
+            }
+          })
+        }
+      })
+      return vehicleStatus;
+    }
+
     const jwt = new URLSearchParams(window.location.search).get("jwt");
 
     const extid = new URLSearchParams(window.location.search).get("extid");
@@ -199,6 +221,7 @@
     var coordinates = undefined;
     var caller = undefined;
     var vehicles = [];
+    var vehicleStatus = {};
     let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
 
     channel.on("events.update", (payload) => {
@@ -215,6 +238,7 @@
           coordinates = handleCoordinates(event, table, coordinates);
           caller = handleCaller(event, table, caller);
           vehicles = handleVehicles(event, table, vehicles);
+          vehicleStatus = handleVehicles(event, table, vehicleStatus);
         });
       }
     });
