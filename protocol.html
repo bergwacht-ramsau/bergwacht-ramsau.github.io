@@ -19,7 +19,7 @@
     function getTableIndex(table, time, options) {
       const rows = table.rows;
       for (var i = 0; i < rows.length; i++) {
-        if (rows[i].cells[0].innerHTML < time.toLocaleString("de-DE", options)) {
+        if (parseDate(rows[i].cells[0].getAttribute("time")) < time) {
           return i;
         }
       }
@@ -40,6 +40,7 @@
       var originCell = row.insertCell();
       var descriptionCell = row.insertCell();
       timestampCell.innerHTML = time.toLocaleString("de-DE", options);
+      timestampCell.setAttribute("time", time.toISOString());
       originCell.innerHTML = from;
       descriptionCell.innerHTML = text;
 
@@ -152,7 +153,7 @@
         addTableRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
         const coordinatesId = document.getElementById("coordinates");
         coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
-        }
+      }
       return coordinates;
     }
 
