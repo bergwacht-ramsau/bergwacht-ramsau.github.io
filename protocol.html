@@ -25,7 +25,7 @@
       }
       return rows.length;
     }
-    function addTableRow(table, time, from, text, edit = false, uuid = "") {
+    function addTableRow(table, time, from, description, action, edit, uuid) {
       const options = {
         year: "numeric",
         month: "2-digit",
@@ -39,17 +39,21 @@
       var timestampCell = row.insertCell();
       var originCell = row.insertCell();
       var descriptionCell = row.insertCell();
+      var actionCell = row.insertCell();
       timestampCell.innerHTML = time.toLocaleString("de-DE", options);
       timestampCell.setAttribute("time", time.toISOString());
       originCell.innerHTML = from;
-      descriptionCell.innerHTML = text;
-
+      descriptionCell.innerHTML = description;
+      actionCell.innerHTML = action;
+      actionCell.setAttribute("uuid", uuid);
       var editCell = row.insertCell();
       editCell.className = "no-print";
+
+      editCell.innerHTML = "<button onClick=\"editAction()\">bearbeiten</button>";
+      editCell.setAttribute("time", getInputDate(time));
+      editCell.setAttribute("uuid", uuid);
       if (edit) {
-        editCell.innerHTML = "<button onClick=\"editManualRow()\">-</button>";
-        editCell.setAttribute("time", getInputDate(time));
-        editCell.setAttribute("uuid", uuid);
+        editCell.innerHTML = "<button onClick=\"editAction()\">bearbeiten</button> <button onClick=\"editManualRow()\">-</button>";
       }
     }
 
@@ -58,14 +62,46 @@
       const time = document.getElementById("manualTime");
       const from = document.getElementById("manualFrom");
       const message = document.getElementById("manualMessage");
-      let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
+      const action = document.getElementById("manualAction");
+      let manualRows = window.localStorage.getItem(extid + "-manual") ? JSON.parse(window.localStorage.getItem(extid + "-manual")) : [];
       const uuid = crypto.randomUUID();
-      addTableRow(table, parseDate(time.value), from.value, message.value, true, uuid);
-      manualRows.push({ "time": parseDate(time.value), "from": from.value, "message": message.value, "uuid": uuid });
-      window.localStorage.setItem(extid, JSON.stringify(manualRows));
+      addTableRow(table, parseDate(time.value), from.value, message.value, action.value, true, uuid);
+      manualRows.push({ "time": parseDate(time.value), "from": from.value, "message": message.value, "action": action.value, "uuid": uuid });
+      window.localStorage.setItem(extid + "-manual", JSON.stringify(manualRows));
       time.value = "";
       from.value = "";
       message.value = "";
+      action.value = "";
+    }
+
+    function editAction() {
+      var td = event.target.parentNode;
+      td.innerHTML = td.innerHTML.replace("editAction", "saveAction").replace("bearbeiten", "speichern");
+      var tr = td.parentNode; // the row to be removed
+      const cells = tr.cells;
+      var textarea = document.createElement("textarea");
+      textarea.id = "area" + td.getAttribute("uuid");
+      textarea.value = cells[3].innerHTML;;
+      cells[3].innerHTML = "";
+      cells[3].appendChild(textarea);
+      document.getElementById("area" + td.getAttribute("uuid")).focus();
+    }
+
+    function saveAction() {
+      var td = event.target.parentNode;
+      td.innerHTML = td.innerHTML.replace("saveAction", "editAction").replace("speichern", "bearbeiten");
+      var tr = td.parentNode; // the row to be removed
+      const cells = tr.cells;
+      const textarea = document.getElementById("area" + td.getAttribute("uuid"));
+      const action = textarea.value;
+      let autoRows = window.localStorage.getItem(extid + "-auto") ? JSON.parse(window.localStorage.getItem(extid + "-auto")) : [];
+      let row = autoRows.find(row => row.uuid === td.getAttribute("uuid"));
+      autoRows = autoRows.filter(row => row.uuid !== td.getAttribute("uuid"));
+      row.action = action;
+      autoRows.push(row);
+      window.localStorage.setItem(extid + "-auto", JSON.stringify(autoRows));
+      cells[3].removeChild(textarea);
+      cells[3].innerHTML = action;
     }
 
     function editManualRow() {
@@ -76,9 +112,11 @@
       const time = document.getElementById("manualTime");
       const from = document.getElementById("manualFrom");
       const message = document.getElementById("manualMessage");
+      const action = document.getElementById("manualAction");
       time.value = td.getAttribute("time");
       from.value = cells[1].innerHTML;
       message.value = cells[2].innerHTML;
+      action.value = cells[3].innerHTML;
       let manualRows = JSON.parse(window.localStorage.getItem(extid));
       manualRows = manualRows.filter(row => row.uuid === td.getAttribute("uuid"));
       window.localStorage.setItem(extid, JSON.stringify(manualRows));
@@ -94,6 +132,14 @@
 
     }
 
+    function addAutoRow(table, time, from, message) {
+      let autoRows = window.localStorage.getItem(extid + "-auto") ? JSON.parse(window.localStorage.getItem(extid + "-auto")) : [];
+      const uuid = crypto.randomUUID();
+      addTableRow(table, time, from, message, "", false, uuid);
+      autoRows.push({ "time": time, "from": from, "message": message, "action": "", "uuid": uuid });
+      window.localStorage.setItem(extid + "-auto", JSON.stringify(autoRows));
+    }
+
     function handleKeyword(event) {
       if (event.subkind === "NEW") {
         const keyword = document.getElementById("keyword");
@@ -101,11 +147,11 @@
       }
     }
 
-    function handleEnd(event, table, end) {
+    function handleEnd(event, table, end, addRow) {
       if (end === false) {
         if (event.payload.data.alarmProtocol && event.payload.data.alarmProtocol.find(status => status.type === "CLOSED")) {
           const index = event.payload.data.alarmProtocol.findIndex(status => status.type === "CLOSED");
-          addTableRow(table, new Date(event.payload.data.alarmProtocol[index].timestamp), "ILS -> EL", "Einsatz abgeschlossen");
+          if (addRow) addAutoRow(table, new Date(event.payload.data.alarmProtocol[index].timestamp), "ILS -> EL", "Einsatz abgeschlossen");
           end = true;
         }
       }
@@ -113,12 +159,12 @@
     }
 
 
-    function handleMessage(event, table, message) {
+    function handleMessage(event, table, message, addRow) {
       if (message !== undefined) {
         if (event.message !== message.text) {
           message["text"] = event.message;
           message["time"] = parseDate(event.originated_at);
-          addTableRow(table, message["time"], "ILS -> EL", "Meldung: " + message["text"]);
+          if (addRow) addAutoRow(table, message["time"], "ILS -> EL", "Meldung: " + message["text"]);
           const messageId = document.getElementById("message");
           messageId.innerHTML = "Meldung: " + message["text"];
         }
@@ -127,20 +173,20 @@
         message = {};
         message["text"] = event.message;
         message["time"] = parseDate(event.originated_at);
-        addTableRow(table, message["time"], "ILS -> EL", "Meldung: " + message["text"]);
+        if (addRow) addAutoRow(table, message["time"], "ILS -> EL", "Meldung: " + message["text"]);
         const messageId = document.getElementById("message");
         messageId.innerHTML = "Meldung: " + message["text"];
       }
       return message;
     }
 
-    function handleCoordinates(event, table, coordinates) {
+    function handleCoordinates(event, table, coordinates, addRow) {
       if (coordinates !== undefined) {
         if (event.latitude !== coordinates.latitude || event.longitude !== coordinates.longitude) {
           coordinates["latitude"] = event.latitude;
           coordinates["longitude"] = event.longitude;
           coordinates["time"] = parseDate(event.originated_at);
-          addTableRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
           const coordinatesId = document.getElementById("coordinates");
           coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
         }
@@ -150,14 +196,14 @@
         coordinates["latitude"] = event.latitude;
         coordinates["longitude"] = event.longitude;
         coordinates["time"] = parseDate(event.originated_at);
-        addTableRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS -> EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
         const coordinatesId = document.getElementById("coordinates");
         coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
       }
       return coordinates;
     }
 
-    function handleCaller(event, table, caller) {
+    function handleCaller(event, table, caller, addRow) {
       if (event.payload.data.caller === undefined) {
         return caller;
       }
@@ -166,7 +212,7 @@
           caller["contact"] = event.payload.data.caller.contact;
           caller["name"] = event.payload.data.caller.name;
           caller["time"] = parseDate(event.originated_at);
-          addTableRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
           const callerId = document.getElementById("caller");
           callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": " + caller["contact"];
         }
@@ -176,27 +222,27 @@
         caller["contact"] = event.payload.data.caller.contact;
         caller["name"] = event.payload.data.caller.name;
         caller["time"] = parseDate(event.originated_at);
-        addTableRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS -> EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
         const callerId = document.getElementById("caller");
         callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
       }
       return caller;
     }
 
-    function handleVehicles(event, table, vehicles) {
+    function handleVehicles(event, table, vehicles, addRow) {
       if (event.payload.data.vehicles === undefined) {
         return vehicles;
       }
       event.payload.data.vehicles.forEach(vehicle => {
         if (!vehicles.includes(vehicle.name)) {
           vehicles.push(vehicle.name);
-          addTableRow(table, new Date(vehicle.alarmedTime), "ILS -> EL", "Neues Einsatzmittel: " + vehicle.name);
+          if (addRow) addAutoRow(table, new Date(vehicle.alarmedTime), "ILS -> EL", "Neues Einsatzmittel: " + vehicle.name);
         }
       })
       return vehicles;
     }
 
-    function handleVehicleStatus(event, table, vehicleStatus) {
+    function handleVehicleStatus(event, table, vehicleStatus, addRow) {
       if (event.payload.data.vehicleStatusHistory === undefined) {
         return vehicleStatus;
       }
@@ -206,11 +252,11 @@
             if (vehicleStatus[vehicle.name]) {
               if (!vehicleStatus[vehicle.name].includes(status.timestamp)) {
                 vehicleStatus[vehicle.name].push(status.timestamp);
-                addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
+                if (addRow) addAutoRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
               }
             } else {
               vehicleStatus[vehicle.name] = [status.timestamp];
-              addTableRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
+              if (addRow) addAutoRow(table, new Date(status.timestamp), vehicle.name + " -> ILS", vehicle.name + ": Status: " + status.status);
             }
           })
         }
@@ -251,7 +297,9 @@
     var vehicles = [];
     var vehicleStatus = {};
     var end = false;
-    let manualRows = window.localStorage.getItem(extid) ? JSON.parse(window.localStorage.getItem(extid)) : [];
+    let manualRows = window.localStorage.getItem(extid + "-manual") ? JSON.parse(window.localStorage.getItem(extid + "-manual")) : [];
+    let autoRows = window.localStorage.getItem(extid + "-auto") ? JSON.parse(window.localStorage.getItem(extid + "-auto")) : [];
+    let handledIds = window.localStorage.getItem(extid + "-handled") ? JSON.parse(window.localStorage.getItem(extid + "-handled")) : [];
 
     channel.on("events.update", (payload) => {
       console.log("Received", payload);
@@ -261,13 +309,25 @@
       if (events) {
         const table = document.getElementById("events-rows");
         events.forEach(event => {
-          handleKeyword(event);
-          message = handleMessage(event, table, message);
-          coordinates = handleCoordinates(event, table, coordinates);
-          caller = handleCaller(event, table, caller);
-          vehicles = handleVehicles(event, table, vehicles);
-          vehicleStatus = handleVehicleStatus(event, table, vehicleStatus);
-          end = handleEnd(event, table, end);
+          if (!handledIds.includes(event.id)) {
+            handleKeyword(event);
+            message = handleMessage(event, table, message, true);
+            coordinates = handleCoordinates(event, table, coordinates, true);
+            caller = handleCaller(event, table, caller, true);
+            vehicles = handleVehicles(event, table, vehicles, true);
+            vehicleStatus = handleVehicleStatus(event, table, vehicleStatus, true);
+            end = handleEnd(event, table, end, true);
+            handledIds.push(event.id);
+            window.localStorage.setItem(extid + "-handled", JSON.stringify(handledIds));
+          } else {
+            handleKeyword(event);
+            message = handleMessage(event, table, message, false);
+            coordinates = handleCoordinates(event, table, coordinates, false);
+            caller = handleCaller(event, table, caller, false);
+            vehicles = handleVehicles(event, table, vehicles, false);
+            vehicleStatus = handleVehicleStatus(event, table, vehicleStatus, false);
+            end = handleEnd(event, table, end, false);
+          }
         });
       }
     });
@@ -288,7 +348,8 @@
       });
     window.onload = function () {
       const table = document.getElementById("events-rows");
-      manualRows.forEach(row => addTableRow(table, parseDate(row.time), row.from, row.message, true, row.uuid));
+      autoRows.forEach(row => addTableRow(table, parseDate(row.time), row.from, row.message, row.action, false, row.uuid));
+      manualRows.forEach(row => addTableRow(table, parseDate(row.time), row.from, row.message, row.action, true, row.uuid));
     }
   </script>
 
@@ -334,7 +395,9 @@
             <th style="width: 20%">Zeit<br><input type="datetime-local" id="manualTime" class="no-print"></th>
             <th style="width: 20%">Von -> An<br><input type="text" id="manualFrom" onfocus="onFocus()" class="no-print">
             </th>
-            <th style="width: 50%">Meldung<br><textarea id="manualMessage" onfocus="onFocus()"
+            <th style="width: 25%">Meldung<br><textarea id="manualMessage" onfocus="onFocus()"
+                class="no-print"></textarea></th>
+            <th style="width: 25%">Maßnahmen/Sonstiges<br><textarea id="manualAction" onfocus="onFocus()"
                 class="no-print"></textarea></th>
             <th style="width: 20%" class="no-print">Aktion<br><button onClick="addManualRow()">+</button></th>
           </tr>
