@@ -116,10 +116,10 @@
       time.value = td.getAttribute("time");
       from.value = cells[1].innerHTML;
       message.value = cells[2].innerHTML;
-      action.value = cells[3].innerHTML;
-      let manualRows = JSON.parse(window.localStorage.getItem(extid));
+      action.value = cells[3].innerHTML.startsWith("<textarea") ? cells[3].firstChild.value : cells[3].innerHTML;
+      let manualRows = JSON.parse(window.localStorage.getItem(extid + "-manual"));
       manualRows = manualRows.filter(row => row.uuid === td.getAttribute("uuid"));
-      window.localStorage.setItem(extid, JSON.stringify(manualRows));
+      window.localStorage.setItem(extid + "-manual", JSON.stringify(manualRows));
       tr.parentNode.removeChild(tr);
     }
 
