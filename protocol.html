@@ -50,10 +50,14 @@
       descriptionCell.innerHTML = description;
       actionCell.innerHTML = action;
       actionCell.setAttribute("uuid", uuid);
-      actionCell.setAttribute("onclick", "editAction()");
       if (edit) {
-        actionCell.setAttribute("manual", true);
         timestampCell.setAttribute("onclick", "editManualRow");
+        originCell.setAttribute("onclick", "editManualRow");
+        toCell.setAttribute("onclick", "editManualRow");
+        descriptionCell.setAttribute("onclick", "editManualRow");
+        actionCell.setAttribute("onclick", "editManualRow");
+      } else {
+        actionCell.setAttribute("onclick", "editAction()");
       }
     }
 
@@ -95,29 +99,18 @@
       var td = event.target.parentNode;
       const textarea = document.getElementById("area" + td.getAttribute("uuid"));
       const action = textarea.value;
-      if (td.getAttribute("manual")) {
-        let manualRows = window.localStorage.getItem(extid + "-manual") ? JSON.parse(window.localStorage.getItem(extid + "-manual")) : [];
-        let row = manualRows.find(row => row.uuid === td.getAttribute("uuid"));
-        manualRows = manualRows.filter(row => row.uuid !== td.getAttribute("uuid"));
-        row.action = action;
-        manualRows.push(row);
-        window.localStorage.setItem(extid + "-manual", JSON.stringify(manualRows));
-      }
-      else {
-        let autoRows = window.localStorage.getItem(extid + "-auto") ? JSON.parse(window.localStorage.getItem(extid + "-auto")) : [];
-        let row = autoRows.find(row => row.uuid === td.getAttribute("uuid"));
-        autoRows = autoRows.filter(row => row.uuid !== td.getAttribute("uuid"));
-        row.action = action;
-        autoRows.push(row);
-        window.localStorage.setItem(extid + "-auto", JSON.stringify(autoRows));
-      }
+      let autoRows = window.localStorage.getItem(extid + "-auto") ? JSON.parse(window.localStorage.getItem(extid + "-auto")) : [];
+      let row = autoRows.find(row => row.uuid === td.getAttribute("uuid"));
+      autoRows = autoRows.filter(row => row.uuid !== td.getAttribute("uuid"));
+      row.action = action;
+      autoRows.push(row);
+      window.localStorage.setItem(extid + "-auto", JSON.stringify(autoRows));
       td.removeChild(textarea);
       td.innerHTML = action;
     }
 
     function editManualRow() {
-      // event.target will be the input element.
-      var td = event.target.parentNode;
+      var td = event.target;
       var tr = td.parentNode; // the row to be removed
       const cells = tr.cells;
       const time = document.getElementById("manualTime");
@@ -125,13 +118,13 @@
       const to = document.getElementById("manualTo");
       const message = document.getElementById("manualMessage");
       const action = document.getElementById("manualAction");
-      time.value = td.getAttribute("time");
+      time.value = cells[0].getAttribute("time");
       from.value = cells[1].innerHTML;
       to.value = cells[2].innerHTML;
       message.value = cells[3].innerHTML;
       action.value = cells[4].innerHTML.startsWith("<textarea") ? cells[4].firstChild.value : cells[4].innerHTML;
       let manualRows = JSON.parse(window.localStorage.getItem(extid + "-manual"));
-      manualRows = manualRows.filter(row => row.uuid === td.getAttribute("uuid"));
+      manualRows = manualRows.filter(row => row.uuid === cells[0].getAttribute("uuid"));
       window.localStorage.setItem(extid + "-manual", JSON.stringify(manualRows));
       tr.parentNode.removeChild(tr);
     }
