@@ -51,11 +51,11 @@
       actionCell.innerHTML = action;
       actionCell.setAttribute("uuid", uuid);
       if (edit) {
-        timestampCell.setAttribute("onclick", "editManualRow");
-        originCell.setAttribute("onclick", "editManualRow");
-        toCell.setAttribute("onclick", "editManualRow");
-        descriptionCell.setAttribute("onclick", "editManualRow");
-        actionCell.setAttribute("onclick", "editManualRow");
+        timestampCell.setAttribute("onclick", "editManualRow()");
+        originCell.setAttribute("onclick", "editManualRow()");
+        toCell.setAttribute("onclick", "editManualRow()");
+        descriptionCell.setAttribute("onclick", "editManualRow()");
+        actionCell.setAttribute("onclick", "editManualRow()");
       } else {
         actionCell.setAttribute("onclick", "editAction()");
       }
