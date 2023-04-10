@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://passport.services.bergwacht-bayern.org/public/base.css">
+
+    <script src="https://api.services.bergwacht-bayern.org/js/phoenix.js"></script>
+
+    <script>
+        function parseDate(str_date) {
+            return new Date(Date.parse(str_date));
+        }
+
+        function getTableIndex(table, time, options) {
+            const rows = table.rows;
+            for (var i = 0; i < rows.length; i++) {
+                if (parseDate(rows[i].cells[0].getAttribute("time")) < time) {
+                    return i;
+                }
+            }
+            return rows.length;
+        }
+
+
+        function getInputDate(date) {
+            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return date.toISOString().slice(0, 16);
+        }
+
+        function openProtocol() {
+            var tr = event.target.parentNode;
+            console.log(tr);
+            const extid = tr.getAttribute("extid");
+            window.open('https://bergwacht-ramsau.de/protocol?jwt=' + jwt + "&extid=" + extid, '_blank').focus();
+        }
+
+        const options = {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        };
+
+        const jwt = new URLSearchParams(window.location.search).get("jwt");
+
+        const now = new Date();
+
+        const replay = now.toISOString().split('T')[0];
+
+        let handledIds = [];
+
+        const socket = new Phoenix.Socket("wss://api.services.bergwacht-bayern.org/socket", {
+            params: { token: jwt },
+        });
+
+        socket.connect();
+
+        const channel = socket.channel("eventhub", {});
+
+        channel.on("events.update", (payload) => {
+            console.log("Received", payload);
+
+            const events = payload.events;
+
+            if (events) {
+                const table = document.getElementById("events-rows");
+
+                events.forEach(event => {
+                    if (!handledIds.includes(event.extid)) {
+                        const time = parseDate(event.originated_at);
+                        index = getTableIndex(table, time, options);
+                        var row = table.insertRow(index);
+                        row.setAttribute("onclick", "openProtocol()");
+                        row.setAttribute("extid", event.extid);
+                        var timestampCell = row.insertCell();
+                        var keywordCell = row.insertCell();
+                        var descriptionCell = row.insertCell();
+
+                        timestampCell.innerHTML = time.toLocaleString("de-DE", options);
+                        timestampCell.setAttribute("time", getInputDate(time));
+                        keywordCell.innerHTML = event.payload.data.keyword;
+                        descriptionCell.innerHTML = event.message;
+                        handledIds.push(event.extid);
+                    }
+                });
+            }
+        });
+
+        channel
+            .join()
+            .receive("ok", (resp) => {
+                console.log("Joined successfully", resp);
+
+                channel.push("catchup", {
+                    since: replay
+                });
+            })
+            .receive("error", (resp) => {
+                console.log("Unable to join", resp);
+            });
+    </script>
+
+    <style>
+        table {
+            table-layout: fixed;
+            width: 100%;
+            margin-top: 1em;
+        }
+
+        th {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="fullscreen">
+        <div class="content">
+            <h1>Heutige Alarme</h1>
+
+            <table style="width: 95%">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Alarmzeit</th>
+                        <th style="width: 30%">Stichwort</th>
+                        <th style="width: 50%">Alarmtext</th>
+                    </tr>
+                </thead>
+                <tbody id="events-rows">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
