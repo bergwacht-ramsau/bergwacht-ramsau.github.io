@@ -276,6 +276,15 @@
 
     function clearProtocol() {
       if (confirm("Den Einsatz wirklich abschließen?\nAlle Einträge werden gelöscht!")) {
+          window.localStorage.removeItem(extid + "-manual");
+          window.localStorage.removeItem(extid + "-auto");
+          window.localStorage.removeItem(extid + "-handled");
+          location.reload();
+      }
+    }
+
+    /*function clearProtocol() {
+      if (confirm("Den Einsatz wirklich abschließen?\nAlle Einträge werden gelöscht!")) {
         const table = document.getElementById("events-rows");
         const protocol = [];
         for (let row of table.rows) {
@@ -290,7 +299,7 @@
           window.open('https://office.bergwacht-bayern.de', '_self', '');
         }).catch(error => { console.log(error); alert("Fehler, bitte erneut versuchen!") });
       }
-    }
+    }*/
 
     const jwt = new URLSearchParams(window.location.search).get("jwt");
 
