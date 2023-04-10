@@ -157,7 +157,7 @@
       if (end === false) {
         if (event.payload.data.alarmProtocol && event.payload.data.alarmProtocol.find(status => status.type === "CLOSED")) {
           const index = event.payload.data.alarmProtocol.findIndex(status => status.type === "CLOSED");
-          if (addRow) addAutoRow(table, new Date(event.payload.data.alarmProtocol[index].timestamp), "ILS", "EL", "Einsatz abgeschlossen");
+          if (addRow) addAutoRow(table, new Date(event.payload.data.alarmProtocol[index].timestamp), "ILS", "Einsatzleitung", "Einsatz abgeschlossen");
           end = true;
         }
       }
@@ -170,7 +170,7 @@
         if (event.message !== message.text) {
           message["text"] = event.message;
           message["time"] = parseDate(event.originated_at);
-          if (addRow) addAutoRow(table, message["time"], "ILS", "EL", "Meldung: " + message["text"]);
+          if (addRow) addAutoRow(table, message["time"], "ILS", "Einsatzleitung", "Meldung: " + message["text"]);
           const messageId = document.getElementById("message");
           messageId.innerHTML = "Meldung: " + message["text"];
         }
@@ -179,7 +179,7 @@
         message = {};
         message["text"] = event.message;
         message["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, message["time"], "ILS", "EL", "Meldung: " + message["text"]);
+        if (addRow) addAutoRow(table, message["time"], "ILS", "Einsatzleitung", "Meldung: " + message["text"]);
         const messageId = document.getElementById("message");
         messageId.innerHTML = "Meldung: " + message["text"];
       }
@@ -192,7 +192,7 @@
           coordinates["latitude"] = event.latitude;
           coordinates["longitude"] = event.longitude;
           coordinates["time"] = parseDate(event.originated_at);
-          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
           const coordinatesId = document.getElementById("coordinates");
           coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
         }
@@ -202,7 +202,7 @@
         coordinates["latitude"] = event.latitude;
         coordinates["longitude"] = event.longitude;
         coordinates["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "EL", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
         const coordinatesId = document.getElementById("coordinates");
         coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
       }
@@ -218,7 +218,7 @@
           caller["contact"] = event.payload.data.caller.contact;
           caller["name"] = event.payload.data.caller.name;
           caller["time"] = parseDate(event.originated_at);
-          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
           const callerId = document.getElementById("caller");
           callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": " + caller["contact"];
         }
@@ -228,7 +228,7 @@
         caller["contact"] = event.payload.data.caller.contact;
         caller["name"] = event.payload.data.caller.name;
         caller["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "EL", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
         const callerId = document.getElementById("caller");
         callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
       }
@@ -246,7 +246,7 @@
           var option = document.createElement('option');
           option.value = vehicle.name;
           list.appendChild(option);
-          if (addRow) addAutoRow(table, new Date(vehicle.alarmedTime), "ILS", "EL", "Neues Einsatzmittel: " + vehicle.name);
+          if (addRow) addAutoRow(table, new Date(vehicle.alarmedTime), "ILS", "Einsatzleitung", "Neues Einsatzmittel: " + vehicle.name);
         }
       })
       return vehicles;
@@ -276,10 +276,10 @@
 
     function clearProtocol() {
       if (confirm("Den Einsatz wirklich abschließen?\nProtokoll unbedingt erst drucken!\nAlle Einträge werden gelöscht!")) {
-          window.localStorage.removeItem(extid + "-manual");
-          window.localStorage.removeItem(extid + "-auto");
-          window.localStorage.removeItem(extid + "-handled");
-          location.reload();
+        window.localStorage.removeItem(extid + "-manual");
+        window.localStorage.removeItem(extid + "-auto");
+        window.localStorage.removeItem(extid + "-handled");
+        location.reload();
       }
     }
 
@@ -427,6 +427,7 @@
                 onkeypress="addManualRow()" class="no-print"></textarea></th>
             <datalist id="origin">
               <option value="ILS">
+              <option value="Einsatzleitung">
             </datalist>
           </tr>
         </thead>
