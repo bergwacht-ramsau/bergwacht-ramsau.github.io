@@ -46,7 +46,7 @@
 
         const now = new Date();
 
-        const replay = now.toISOString().split('T')[0];
+        const replay = new URLSearchParams(window.location.search).get("date") ?? now.toISOString().split('T')[0];
 
         let handledIds = [];
 
