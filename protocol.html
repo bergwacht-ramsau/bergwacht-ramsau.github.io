@@ -187,7 +187,7 @@
     }
 
     function handleCoordinates(event, table, coordinates, addRow) {
-      if(event.latitude !== undefined && event.longitude !== undefined){
+      if(event.latitude !== undefined && event.longitude !== undefined && event.latitude !== null && event.longitude !== null){
       if (coordinates !== undefined) {
         if (event.latitude !== coordinates.latitude || event.longitude !== coordinates.longitude) {
           coordinates["latitude"] = event.latitude;
