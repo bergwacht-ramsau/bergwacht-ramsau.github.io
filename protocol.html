@@ -187,12 +187,13 @@
     }
 
     function handleCoordinates(event, table, coordinates, addRow) {
+      if(event.latitude !== undefined && event.longitude !== undefined){
       if (coordinates !== undefined) {
         if (event.latitude !== coordinates.latitude || event.longitude !== coordinates.longitude) {
           coordinates["latitude"] = event.latitude;
           coordinates["longitude"] = event.longitude;
           coordinates["time"] = parseDate(event.originated_at);
-          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>");
           const coordinatesId = document.getElementById("coordinates");
           coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
         }
@@ -202,10 +203,11 @@
         coordinates["latitude"] = event.latitude;
         coordinates["longitude"] = event.longitude;
         coordinates["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + coordinates["latitude"] + " / " + coordinates["longitude"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>");
         const coordinatesId = document.getElementById("coordinates");
         coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
       }
+    }
       return coordinates;
     }
 
@@ -220,7 +222,7 @@
           caller["time"] = parseDate(event.originated_at);
           if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
           const callerId = document.getElementById("caller");
-          callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": " + caller["contact"];
+          callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
         }
       }
       else {
@@ -405,7 +407,7 @@
     <div class="content">
       <h1 id="keyword">Einsatzprotokoll:</h1><button onclick="window.print();return false;" class="no-print"
         style="float: right; margin-right: 5%;">Protokoll drucken</button>
-      <h3 id="caller">Rückrufnummer:</h3><button onclick="clearProtocol()" class="no-print"
+      <h3 id="caller" class="no-print">Rückrufnummer:</h3><button onclick="clearProtocol()" class="no-print"
         style="float: right; margin-right: 5%;">Protokoll abschließen</button>
       <h3 id="coordinates">Koordinaten:</h3>
       <h3 id="message">Meldung:</h3>
@@ -428,6 +430,7 @@
             <datalist id="origin">
               <option value="ILS">
               <option value="Einsatzleitung">
+              <option value="Melder:in">
             </datalist>
           </tr>
         </thead>
