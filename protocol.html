@@ -334,6 +334,7 @@
         const table = document.getElementById("events-rows");
         events.forEach(event => {
           if (!handledIds.includes(event.id)) {
+            window.localStorage.setItem(extid + "-handled", JSON.stringify(handledIds));
             handleKeyword(event);
             message = handleMessage(event, table, message, true);
             coordinates = handleCoordinates(event, table, coordinates, true);
@@ -342,7 +343,6 @@
             vehicleStatus = handleVehicleStatus(event, table, vehicleStatus, true);
             end = handleEnd(event, table, end, true);
             handledIds.push(event.id);
-            window.localStorage.setItem(extid + "-handled", JSON.stringify(handledIds));
           } else {
             handleKeyword(event);
             message = handleMessage(event, table, message, false);
