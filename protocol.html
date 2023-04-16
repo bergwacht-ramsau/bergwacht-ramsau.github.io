@@ -7,6 +7,12 @@
   <script src="https://api.services.bergwacht-bayern.org/js/phoenix.js"></script>
 
   <script>
+    const BASE_URL = "https://api.bergwacht-allgaeu.de";
+    const WEBSOCKET_URL = "wss://api.bergwacht-allgaeu.de/socket";
+
+    const URLPARAMS = new URLSearchParams(window.location.search);
+    const JWT = URLPARAMS.get("jwt");
+
     function parseDate(str_date) {
       return new Date(Date.parse(str_date));
     }
@@ -187,9 +193,19 @@
     }
 
     function handleCoordinates(event, table, coordinates, addRow) {
-      if(event.latitude !== undefined && event.longitude !== undefined && event.latitude !== null && event.longitude !== null){
-      if (coordinates !== undefined) {
-        if (event.latitude !== coordinates.latitude || event.longitude !== coordinates.longitude) {
+      if (event.latitude !== undefined && event.longitude !== undefined && event.latitude !== null && event.longitude !== null) {
+        if (coordinates !== undefined) {
+          if (event.latitude !== coordinates.latitude || event.longitude !== coordinates.longitude) {
+            coordinates["latitude"] = event.latitude;
+            coordinates["longitude"] = event.longitude;
+            coordinates["time"] = parseDate(event.originated_at);
+            if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>");
+            const coordinatesId = document.getElementById("coordinates");
+            coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
+          }
+        }
+        else {
+          coordinates = {};
           coordinates["latitude"] = event.latitude;
           coordinates["longitude"] = event.longitude;
           coordinates["time"] = parseDate(event.originated_at);
@@ -198,41 +214,31 @@
           coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
         }
       }
-      else {
-        coordinates = {};
-        coordinates["latitude"] = event.latitude;
-        coordinates["longitude"] = event.longitude;
-        coordinates["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>");
-        const coordinatesId = document.getElementById("coordinates");
-        coordinatesId.innerHTML = "Koordinaten: " + "<a href=\"https://geoportal.bayern.de/bayernatlas/?E=" + coordinates["longitude"] + "&N=" + coordinates["latitude"] + "&zoom=10&crosshair=marker&lang%3Dde&topic=ba&catalogNodes=11&bgLayer=tk&lang=de\">" + coordinates["latitude"] + " / " + coordinates["longitude"] + "</a>";
-      }
-    }
       return coordinates;
     }
 
     function handleCaller(event, table, caller, addRow) {
-      if (event.payload.data.caller === undefined) {
+      if (event.payload.data.caller === undefined || !event.payload.data.caller) {
         return caller;
       }
       if (caller !== undefined) {
         if (event.payload.data.caller.contact !== caller.contact || event.payload.data.caller.name !== caller.name) {
           caller["contact"] = event.payload.data.caller.contact;
-          caller["name"] = event.payload.data.caller.name;
+          caller["name"] = event.payload.data.caller.name || "Unbekannt";
           caller["time"] = parseDate(event.originated_at);
-          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+          if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + " " + caller["contact"]);
           const callerId = document.getElementById("caller");
-          callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
+          callerId.innerHTML = "Rückrufnummer: " + caller["name"] + " <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
         }
       }
       else {
         caller = {};
         caller["contact"] = event.payload.data.caller.contact;
-        caller["name"] = event.payload.data.caller.name;
+        caller["name"] = event.payload.data.caller.name || "Unbekannt";
         caller["time"] = parseDate(event.originated_at);
-        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + ": " + caller["contact"]);
+        if (addRow) addAutoRow(table, coordinates["time"], "ILS", "Einsatzleitung", "Rückrufnummer: " + caller["name"] + " " + caller["contact"]);
         const callerId = document.getElementById("caller");
-        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + ": <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
+        callerId.innerHTML = "Rückrufnummer: " + caller["name"] + " <a href=\"tel:" + caller["contact"] + "\">" + caller["contact"] + "</a>";
       }
       return caller;
     }
@@ -277,38 +283,31 @@
     }
 
     function clearProtocol() {
-      if (confirm("Den Einsatz wirklich abschließen?\nProtokoll unbedingt erst drucken!\nAlle Einträge werden gelöscht!")) {
-        window.localStorage.removeItem(extid + "-manual");
-        window.localStorage.removeItem(extid + "-auto");
-        window.localStorage.removeItem(extid + "-handled");
-        location.reload();
-      }
-    }
-
-    /*function clearProtocol() {
       if (confirm("Den Einsatz wirklich abschließen?\nAlle Einträge werden gelöscht!")) {
-        const table = document.getElementById("events-rows");
-        const protocol = [];
-        for (let row of table.rows) {
-          protocol.push({ time: row.cells[0].innerHTML, from: row.cells[1].innerHTML, to: row.cells[2], message: row.cells[3].innerHTML, sonstiges: row.cells[4].innerHTML });
+        const body = {
+          data: {
+            attributes: {
+              payload: {
+                "bwb:notes": JSON.parse(window.localStorage.getItem(extid + "-manual") || "[]")
+              }
+            }
+          }
         }
-        const body = { data: { attributes: { payload: { 'bwb:accounting': { protocol: protocol } } } } }
-        fetch("https://api.services.bergwacht-bayern.org/api/eventhub/alarms/" + extid, { method: "PATCH", headers: { "Content-Type": "application/vnd.api+json", "Accept": "application/vnd.api+json", "Authorization": "Bearer " + jwt }, body: JSON.stringify(body) }).then(response => response.json()).then(data => {
+        fetch(BASE_URL + "/api/eventhub/alarms/" + extid, { method: "PATCH", headers: { "Content-Type": "application/vnd.api+json", "Accept": "application/vnd.api+json", "Authorization": "Bearer " + JWT }, body: JSON.stringify(body) }).then(response => response.json()).then(data => {
           console.log(data);
           window.localStorage.removeItem(extid + "-manual");
           window.localStorage.removeItem(extid + "-auto");
           window.localStorage.removeItem(extid + "-handled");
-          window.open('https://office.bergwacht-bayern.de', '_self', '');
+
+          location.href = "/alarms?jwt=" + JWT;
         }).catch(error => { console.log(error); alert("Fehler, bitte erneut versuchen!") });
       }
-    }*/
+    }
 
-    const jwt = new URLSearchParams(window.location.search).get("jwt");
+    const extid = URLPARAMS.get("extid");
 
-    const extid = new URLSearchParams(window.location.search).get("extid");
-
-    const socket = new Phoenix.Socket("wss://api.services.bergwacht-bayern.org/socket", {
-      params: { token: jwt },
+    const socket = new Phoenix.Socket(WEBSOCKET_URL, {
+      params: { token: JWT },
     });
 
     socket.connect();

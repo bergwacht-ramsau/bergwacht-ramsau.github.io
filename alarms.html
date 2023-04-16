@@ -7,6 +7,12 @@
     <script src="https://api.services.bergwacht-bayern.org/js/phoenix.js"></script>
 
     <script>
+        const BASE_URL = "https://api.bergwacht-allgaeu.de";
+        const WEBSOCKET_URL = "wss://api.bergwacht-allgaeu.de/socket";
+
+        const URLPARAMS = new URLSearchParams(window.location.search);
+        const JWT = URLPARAMS.get("jwt");
+
         function parseDate(str_date) {
             return new Date(Date.parse(str_date));
         }
@@ -31,7 +37,54 @@
             var tr = event.target.parentNode;
             console.log(tr);
             const extid = tr.getAttribute("extid");
-            window.open('https://bergwacht-ramsau.de/protocol?jwt=' + jwt + "&extid=" + extid, '_blank').focus();
+
+            location.href = "/protocol?jwt=" + JWT + "&extid=" + extid, "_blank";
+        }
+
+        function appendAlarm(alarm) {
+            const table = document.getElementById("events-rows");
+            const time = parseDate(alarm.originated_at);
+
+            var index = getTableIndex(table, time, options);
+            var row = table.insertRow(index);
+
+            row.setAttribute("onclick", "openProtocol()");
+            row.setAttribute("extid", alarm.extid);
+
+            var timestampCell = row.insertCell();
+            var keywordCell = row.insertCell();
+            var descriptionCell = row.insertCell();
+
+            timestampCell.innerHTML = time.toLocaleString("de-DE", options);
+            timestampCell.setAttribute("time", getInputDate(time));
+            keywordCell.innerHTML = alarm.payload.data.keyword;
+            descriptionCell.innerHTML = alarm.message;
+            handledIds.push(alarm.extid);
+        }
+
+        function loadLatestOpenAlarms() {
+            const now = new Date();
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            const originated_after = URLPARAMS.get("date") ?? twentyFourHoursAgo.toISOString();
+
+            const queryParams = new URLSearchParams({
+                // subkind: "OPEN",
+                originated_after: originated_after,
+            });
+
+            const url = BASE_URL + "/api/eventhub/alarms?" + queryParams.toString();
+
+            fetch(url, {
+                method: "GET", headers: {
+                    "Content-Type": "application/vnd.api+json",
+                    "Accept": "application/vnd.api+json",
+                    "Authorization": "Bearer " + JWT
+                }
+            }).then(response => response.json()).then(data => {
+                data.data.forEach(alarm => {
+                    appendAlarm(alarm.attributes);
+                });
+            }).catch(error => { console.log(error); });
         }
 
         const options = {
@@ -42,16 +95,10 @@
             minute: "2-digit"
         };
 
-        const jwt = new URLSearchParams(window.location.search).get("jwt");
-
-        const now = new Date();
-
-        const replay = new URLSearchParams(window.location.search).get("date") ?? now.toISOString().split('T')[0];
-
         let handledIds = [];
 
-        const socket = new Phoenix.Socket("wss://api.services.bergwacht-bayern.org/socket", {
-            params: { token: jwt },
+        const socket = new Phoenix.Socket(WEBSOCKET_URL, {
+            params: { token: JWT },
         });
 
         socket.connect();
@@ -64,24 +111,9 @@
             const events = payload.events;
 
             if (events) {
-                const table = document.getElementById("events-rows");
-
                 events.forEach(event => {
                     if (!handledIds.includes(event.extid)) {
-                        const time = parseDate(event.originated_at);
-                        index = getTableIndex(table, time, options);
-                        var row = table.insertRow(index);
-                        row.setAttribute("onclick", "openProtocol()");
-                        row.setAttribute("extid", event.extid);
-                        var timestampCell = row.insertCell();
-                        var keywordCell = row.insertCell();
-                        var descriptionCell = row.insertCell();
-
-                        timestampCell.innerHTML = time.toLocaleString("de-DE", options);
-                        timestampCell.setAttribute("time", getInputDate(time));
-                        keywordCell.innerHTML = event.payload.data.keyword;
-                        descriptionCell.innerHTML = event.message;
-                        handledIds.push(event.extid);
+                        appendAlarm(event);
                     }
                 });
             }
@@ -91,14 +123,12 @@
             .join()
             .receive("ok", (resp) => {
                 console.log("Joined successfully", resp);
-
-                channel.push("catchup", {
-                    since: replay
-                });
             })
             .receive("error", (resp) => {
                 console.log("Unable to join", resp);
             });
+
+        loadLatestOpenAlarms();
     </script>
 
     <style>
@@ -117,7 +147,7 @@
 <body>
     <div id="fullscreen">
         <div class="content">
-            <h1>Heutige Alarme</h1>
+            <h1>Letzte Alarme</h1>
 
             <table style="width: 95%">
                 <thead>
