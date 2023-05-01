@@ -1,0 +1,536 @@
+﻿<kml
+	xmlns="http://www.opengis.net/kml/2.2"
+	xmlns:gx="http://www.google.com/kml/ext/2.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+	<Document>
+		<name>Landeplätze</name>
+		<Placemark id="marker_1682799097201">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;!--PanelGroup wird vom Client hinzugefuegt--&gt;&lt;!--&lt;div class="panel-group"&gt;--&gt;&lt;div class="panel panel-default"&gt;&lt;div class="panel-heading"&gt;&lt;h4 class="panel-title"&gt;&lt;a data-toggle="collapse" href="#S1682799648685" onclick=" var that = $('#S1682799648685'); that.collapse('toggle'); $('.collapseable-popup-element').each(function() { if (!that.is($(this))) { $(this).collapse({ toggle: false }); $(this).collapse('hide'); $(this).siblings().find('.icon-caret-down').addClass('hidden'); $(this).siblings().find('.icon-caret-right').removeClass('hidden'); } }); $(this).find('i').toggleClass('hidden'); "&gt;&lt;i class='icon-caret-right' style='margin-right: 0.5em;'&gt;&lt;/i&gt;&lt;i class='hidden icon-caret-down' style='margin-right: 0.5em;'&gt;&lt;/i&gt; Zeichnung &amp;nbsp;(1 Bergwacht Ramsau) &lt;/a&gt;&lt;/h4&gt;&lt;/div&gt;&lt;div id="S1682799648685" class="collapseable-popup-element panel-collapse collapse"&gt;&lt;div class="panel-body"&gt; N: 47° 36’20.57’’
+O: 12° 54’34.71’’
+649 m
+2.130 Fuß &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!--&lt;/div&gt;--&gt;&lt;!--'&lt;div id="S1682799648685" class="htmlpopup-container"&gt;' + '&lt;div class="htmlpopup-header"&gt;' + '&lt;span&gt;' + label + ' &amp;nbsp;&lt;/span&gt;' + '{{name}}' + '&lt;/div&gt;' + '&lt;div class="htmlpopup-content"&gt;' + '{{descr}}' + '&lt;/div&gt;' + '&lt;/div&gt;';--&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://geoportal.bayern.de/ba-backend/files/f_0b3db890-e6ca-11ed-97ab-0f37fe95848c_13ccb697-b517-424a-ac6e-17184ff8ccc3</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>1 Bergwacht Ramsau</name>
+			<description>N: 47° 36’ 20’’
+O: 12° 54’ 34’’
+649 m
+2.130 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.909586340749737,47.605749115200204</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682799139247">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>2 Sportplatz Ramsau</name>
+			<description>N: 47° 36’ 18’’
+O: 12° 54’ 39’’
+644 m
+2.113 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.911016365477256,47.60502543634471</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682799683091">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>3 Klausbachhaus Weidefläche</name>
+			<description>N: 47° 35’ 52‘‘
+O: 12° 50’ 25‘‘
+800 m
+2625 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.840181440627559,47.5975052083961</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682799738381">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>4 Hirschkaser</name>
+			<description>N: 47° 37’ 42‘‘
+O: 12° 55’ 13‘‘
+1.381 m
+4.530 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.920392883922906,47.628411600731475</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682799782057">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>5 Mordau Weidefläche</name>
+			<description>N: 47° 38’51‘‘
+O: 12° 53’19‘‘
+1.192 m
+3.910 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.889122994532377,47.647782230987</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682799941104">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>6 Eisbergscharte Diensthütte</name>
+			<description>N: 47° 37’ 29’’
+O: 12° 50’ 29’’
+1.588 m
+5.210 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.841264275390854,47.62502567293216</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800270399">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>7 Schaflsteig</name>
+			<description>N: 47° 35’ 12’’
+O: 12° 47’ 49’’
+1.719 m
+5.640 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.79713161570916,47.58691619877016</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800339094">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>8 Halsalm</name>
+			<description>N: 47° 36’ 14‘‘
+O: 12° 50‘ 01‘‘
+1.207 m
+3.960 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.833740422816545,47.60412849311017</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800414949">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>9 Reiter Steinberg</name>
+			<description>N: 47° 36’ 32‘‘
+O: 12° 48’ 18‘‘
+2.055 m
+6.740 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.805571377698692,47.60915429811261</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800467820">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>10 Blaueishütte</name>
+			<description>N: 47° 35’ 10’’
+O: 12° 52’ 10’’
+1.655 m
+5.430 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.869560372682685,47.58621310452586</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800635315">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>11 Südspitze oberes Schotterfeld</name>
+			<description>N: 47° 32’ 41’’
+O: 12° 54’ 50’’
+2.375 m
+7.792 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.914276770412476,47.54462087490159</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682800852916">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>12 Südspitze unteres Schotterfeld</name>
+			<description></description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.914164355782864,47.5426521566562</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801200287">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>13 Goldbründl</name>
+			<description>N: 47° 32’ 19’’
+O: 12° 54’ 34’’
+1.861 m
+6.105 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.909343230076958,47.53856445218474</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801277576">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>14 Hirschwieskopf</name>
+			<description>N: 47° 31’ 48’’
+O: 12° 54’ 58’’
+2.108 m
+6.916 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.916393347551018,47.529816303498045</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801314559">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>16 Trischübel Jagdhütte</name>
+			<description>N: 47° 31’ 34’’
+O: 12° 54’ 48’’
+1.796 m
+5.804 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.91336653290151,47.5262682256229</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801363301">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>15 Watzmannhaus</name>
+			<description>N: 47° 34’ 14’’
+O: 12° 56’ 01’’
+1.914 m
+6.280 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.933827953973971,47.5706696653864</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801409462">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>17 Kühroint</name>
+			<description>N: 47° 34’ 14‘‘
+O: 12° 57’ 41‘‘
+1.410 m
+4.625 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.960777374981225,47.570432178139555</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark id="marker_1682801464811">
+			<ExtendedData>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>18 Wimbachgrießhütte</name>
+			<description>N: 47° 32’ 20‘‘
+O: 12° 53’ 17‘‘
+1.325 m
+4.350 Fuß</description>
+			<Style>
+				<IconStyle>
+					<Icon>
+						<href>https://geoportal.bayern.de/ba-backend/icons/255,0,0/marker</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels"/>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>12.88782495085153,47.53887233601477</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>
