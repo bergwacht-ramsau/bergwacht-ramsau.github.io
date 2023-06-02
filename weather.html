@@ -151,15 +151,15 @@
     <div>
         <table id="weather">
             <tr>
-                <th width="160px" class='name'>Name</th>
-                <th width="80px">Höhe</th>
-                <th width="80px">Uhrzeit</th>
+                <th width="240px" class='name'>Name</th>
+                <th width="120px">Höhe</th>
+                <th width="120px">Uhrzeit</th>
                 <th width="80px"><img src="resources/temp.png" alt="Temp °C" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/wind.png" alt="Wind km/h" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/direction.png" alt="Richtung" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/boe.png" alt="Böe km/h" height="64px" width="64px"></th>
-                <th width="80px"><img src="resources/snow.png" alt="HS cm" height="64px" width="64px"></th>
-                <th width="80px"><img src="resources/deltasnow.png" alt="HS/24h cm" height="64px" width="64px"></th>
+                <!--<th width="80px"><img src="resources/snow.png" alt="HS cm" height="64px" width="64px"></th>-->
+                <!--<th width="80px"><img src="resources/deltasnow.png" alt="HS/24h cm" height="64px" width="64px"></th>-->
             </tr>
         </table>
         <div id="avalanche" class="avalanche hidden">
@@ -171,7 +171,7 @@
         <div id="warnings" class="warnings">
         </div>
     </div>
-    <script src="https://www.salzburg.gv.at/lawine/Station.js"></script>
+    <!--<script src="https://www.salzburg.gv.at/lawine/Station.js"></script>-->
     <script type="application/javascript">
         function openInNewTab(url) {
             window.open(url, '_blank').focus();
@@ -247,16 +247,16 @@
                             cell.className = 'WG_BOE'; //
                         }
                         cell.innerHTML = roundWind(weather_array[i]['wind_boe']);
-                        cell = row.insertCell(- 1); // -1 is insert as last
-                        cell.className = 'HS'; //
-                        cell.innerHTML = roundToFive(weather_array[i]['snow']);
-                        cell = row.insertCell(- 1); // -1 is insert as last
-                        if (Math.round(weather_array[i]['snow_delta'] / 5) * 5 > 0) {
-                            cell.className = 'HSD24 warning'; //
-                        } else {
-                            cell.className = 'HSD24'; //
-                        }
-                        cell.innerHTML = roundToFive(weather_array[i]['snow_delta']);
+                        //cell = row.insertCell(- 1); // -1 is insert as last
+                        //cell.className = 'HS'; //
+                        //cell.innerHTML = roundToFive(weather_array[i]['snow']);
+                        //cell = row.insertCell(- 1); // -1 is insert as last
+                        //if (Math.round(weather_array[i]['snow_delta'] / 5) * 5 > 0) {
+                        //    cell.className = 'HSD24 warning'; //
+                        //} else {
+                        //    cell.className = 'HSD24'; //
+                        //}
+                        //cell.innerHTML = roundToFive(weather_array[i]['snow_delta']);
                     }
                 }
             }
@@ -333,7 +333,7 @@
                 "direction": direction,
                 "wind_boe": wind_boe,
                 "snow": snow,
-                "snow_delta": stationData['DE-BY-01 Berchtesgadener Alpen'].find(station => station.name === nameLWD)['measuredData']['values']['HSD24']
+                //"snow_delta": stationData['DE-BY-01 Berchtesgadener Alpen'].find(station => station.name === nameLWD)['measuredData']['values']['HSD24']
             }
         }
 
