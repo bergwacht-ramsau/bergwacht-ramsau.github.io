@@ -24,6 +24,10 @@
             display: flex;
         }
 
+        iframe {
+            border: 0;
+        }
+
         .alarm {
             display: none;
         }
@@ -115,7 +119,6 @@
             bayernatlas.setAttribute("width", "1200");
             bayernatlas.setAttribute("height", "700");
             bayernatlas.setAttribute("frameborder", "0");
-            bayernatlas.setAttribute("style", "border:0");
             infoContainer.appendChild(bayernatlas);
             var responseContainer = document.createElement("div");
             responseContainer.setAttribute("class", "response");
