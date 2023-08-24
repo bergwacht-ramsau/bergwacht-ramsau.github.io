@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta http-equiv="refresh" content="60" />
     <title>Alarmmonitor</title>
+
     <style>
         html {
             background-color: #2d3036;
@@ -19,21 +23,162 @@
             color: #fff;
             display: flex;
         }
+
+        .alarm {
+            display: none;
+        }
+
+        .info {
+            width: 1200px;
+            height: 100%;
+        }
+
+        .response {
+            width: 516px;
+            height: 100%;
+        }
+
+        .keyword {
+            width: 1200px;
+            height: 100px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .message {
+            width: 1200px;
+            height: 540px;
+        }
+
+        .caller {
+            width: 1200px;
+            height: 50px;
+        }
+
+        .coordinates {
+            width: 1200px;
+            height: 50px;
+        }
+
+        .members {
+            height: 900px;
+            width: 516px;
+        }
+
+        .vehicles {
+            height: 540px;
+            width: 516px;
+        }
     </style>
 </head>
 
 <body>
-    <div style="width: 1200px; height: 100%;">
-        <div style="width: 1200px; height: 740px;">
-            <iframe width="1120" height="630" src="https://www.youtube.com/embed/5sCEGaylzzU?si=P1UQF5l9M32Q2qTI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-        <iframe src='https://geoportal.bayern.de/bayernatlas/embed.html?E=791199.66&N=5279496.21&zoom=9&lang%3Dde&topic=ba&catalogNodes=11&lang=de&bgLayer=atkis&layers=KML%7C%7Chttps:%2F%2Fbergwacht-ramsau.de%2Fgeoportal%2Faed.kml%7C%7Ctrue' width='1200' height='700' frameborder='0' style='border:0'></iframe>
-    </div>
     <div style="width: 844px; height: 100%;">
         <iframe style="width: 100%; height: 100%;" src="https://bergwacht-ramsau.de/weather"></iframe>
     </div>
-    <div>
-        <iframe src="https://giphy.com/embed/3o6gDWzmAzrpi5DQU8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/gq-kim-kardashian-make-it-rain-money-shower-3o6gDWzmAzrpi5DQU8">via GIPHY</a></p>
+    <div id="alarmContainer" style="width: 1716px; height: 100%;">
     </div>
+
+    <script>
+        const URLPARAMS = new URLSearchParams(window.location.search);
+        const JWT = URLPARAMS.get("jwt");
+        const BASE_URL = 'https://api.services.bergwacht-bayern.org';
+
+        function appendAlarm(alarm) {
+            var alarmContainer = document.createElement("div");
+            alarmContainer.setAttribute("class", "alarm");
+            alarmContainer.setAttribute("id", alarm.extid);
+            var infoContainer = document.createElement("div");
+            infoContainer.setAttribute("class", "info");
+            var keyword = document.createElement("div");
+            keyword.setAttribute("class", "keyword");
+            keyword.setAttribute("id", "keyword-" + alarm.extid);
+            keyword.innerHTML = alarm.payload.data.keyword;
+            var message = document.createElement("div");
+            message.setAttribute("class", "message");
+            message.setAttribute("id", "message-" + alarm.extid);
+            message.innerHTML = alarm.message;
+            var caller = document.createElement("div");
+            caller.setAttribute("class", "caller");
+            caller.setAttribute("id", "caller-" + alarm.extid);
+            caller.innerHTML = "Rückrufnummer: " + (alarm.payload.data.caller.contact ?? "Unbekannt");
+            var coordinates = document.createElement("div");
+            coordinates.setAttribute("class", "coordinates");
+            coordinates.setAttribute("id", "coordinates-" + alarm.extid);
+            coordinates.innerHTML = "Koordinaten: " + alarm.latitude + " / " + alarm.longitude;
+            infoContainer.appendChild(keyword);
+            infoContainer.appendChild(message);
+            infoContainer.appendChild(caller);
+            infoContainer.appendChild(coordinates);
+            var bayernatlas = document.createElement("iframe");
+            bayernatlas.setAttribute("src", "https://geoportal.bayern.de/bayernatlas/embed.html?E=791199.66&N=5279496.21&zoom=9&lang%3Dde&topic=ba&catalogNodes=11&lang=de&bgLayer=atkis&layers=KML%7C%7Chttps:%2F%2Fbergwacht-ramsau.de%2Fgeoportal%2Faed.kml%7C%7Ctrue");
+            bayernatlas.setAttribute("width", "1200");
+            bayernatlas.setAttribute("height", "700");
+            bayernatlas.setAttribute("frameborder", "0");
+            bayernatlas.setAttribute("style", "border:0");
+            infoContainer.appendChild(bayernatlas);
+            var responseContainer = document.createElement("div");
+            responseContainer.setAttribute("class", "response");
+            var members = document.createElement("div");
+            members.setAttribute("class", "members");
+            members.innerHTML = "<strong>Rückmeldungen</strong><br>"
+            var vehicles = document.createElement("div");
+            vehicles.setAttribute("class", "vehicles");
+            vehicles.innerHTML = "<strong>Fahrzeuge</strong><br>"
+            alarm.payload.data.vehicles.forEach(vehicle => {
+                vehicles.innerHTML = vehicles.innerHTML + vehicle.name + "<br>";
+            })
+            responseContainer.appendChild(members);
+            responseContainer.appendChild(vehicles);
+            alarmContainer.appendChild(infoContainer);
+            alarmContainer.appendChild(responseContainer);
+            document.getElementById("alarmContainer").appendChild(alarmContainer);
+        }
+
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("alarm");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            slides[slideIndex - 1].style.display = "flex";
+            setTimeout(showSlides, 15000); // Change image every 15 seconds
+        }
+
+        function loadLatestOpenAlarms() {
+            const now = new Date();
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            const originated_after = URLPARAMS.get("date") ?? twentyFourHoursAgo.toISOString();
+
+            const queryParams = new URLSearchParams({
+                subkind: "OPEN",
+                originated_after: originated_after,
+            });
+
+            const url = BASE_URL + "/api/eventhub/alarms?" + queryParams.toString();
+
+            fetch(url, {
+                method: "GET", headers: {
+                    "Content-Type": "application/vnd.api+json",
+                    "Accept": "application/vnd.api+json",
+                    "Authorization": "Bearer " + JWT
+                }
+            }).then(response => response.json()).then(data => {
+                console.log(data);
+                data.data.forEach(alarm => {
+                    appendAlarm(alarm.attributes);
+                });
+                showSlides();
+            }).catch(error => { console.log(error); });
+        }
+
+        var slideIndex = 0;
+        loadLatestOpenAlarms();
+
+
+    </script>
 </body>
+
 </html>
