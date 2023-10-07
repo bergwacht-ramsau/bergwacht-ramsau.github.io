@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <link rel="icon" href="Bilder/favicon.ico">
     <meta http-equiv="refresh" content="120" />
@@ -183,7 +184,7 @@
     </script>
     <script>
         var weather_array = []
-        fetch("https://weather.services.bergwacht-bayern.org").then(response =>
+        fetch("https://alarms.services.bergwacht-bayern.org").then(response =>
             response.json().then(json => {
                 weather_array.push(generateStation("Kühroint", "kuehroint", "1420", json));
                 weather_array.push(generateStation("Watzmannhaus", "watzmann", "1928", json));
@@ -370,7 +371,7 @@
 
     </script>
     <script>
-        fetch("https://weather.services.bergwacht-bayern.org/warnings?lat=47.6075&lon=12.8964&level=3").then(response =>
+        fetch("https://alarms.services.bergwacht-bayern.org/warnings?lat=47.6075&lon=12.8964&level=3").then(response =>
             response.json().then(json => {
 
                 var element = document.getElementById('warnings');
@@ -541,7 +542,7 @@
                             element.appendChild(para);
                         }
                     }
-                    problemsAndAspects.forEach((value,key) => {
+                    problemsAndAspects.forEach((value, key) => {
                         const container = document.createElement("div");
                         container.className = "type-aspect";
                         const typeContainer = document.createElement("div");
@@ -645,11 +646,11 @@
                     }
                     return [{ level: level, height: height, end: hiRatings[1].end }, { level: level2, height: height2, end: hiRatings[0].end }];
                 }
-            }else if(tempRatings.length > 1){
-            	if (tempRatings[0].end < tempRatings[0].end) {
-                    return [{ level: tempRatings[0].level , height: null, end: tempRatings[0].end }, { level: tempRatings[1].level, height: null, end: tempRatings[1].end }];
+            } else if (tempRatings.length > 1) {
+                if (tempRatings[0].end < tempRatings[0].end) {
+                    return [{ level: tempRatings[0].level, height: null, end: tempRatings[0].end }, { level: tempRatings[1].level, height: null, end: tempRatings[1].end }];
                 } else {
-                    return [{ level: tempRatings[1].level , height: null, end: tempRatings[1].end }, { level: tempRatings[0].level, height: null, end: tempRatings[0].end }];
+                    return [{ level: tempRatings[1].level, height: null, end: tempRatings[1].end }, { level: tempRatings[0].level, height: null, end: tempRatings[0].end }];
                 }
             }
             return [];
@@ -694,11 +695,11 @@
                     validAspects.push(problems.item(i).getElementsByTagName('validAspect')[j].attributes['xlink:href']['value'].split("Range_")[1]);
                 }
                 const type = getProblemType(problems.item(i).getElementsByTagName('type')[0].innerHTML);
-                if(temp.has(type)){
-                	tempValidAspects = temp.get(type);
-                	temp.set(type, [...new Set([...tempValidAspects, ...validAspects])]);
-                }else{
-                temp.set(type, validAspects);
+                if (temp.has(type)) {
+                    tempValidAspects = temp.get(type);
+                    temp.set(type, [...new Set([...tempValidAspects, ...validAspects])]);
+                } else {
+                    temp.set(type, validAspects);
                 }
             }
             return new Map([...temp.entries()].sort());;
