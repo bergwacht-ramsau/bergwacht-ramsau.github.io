@@ -183,18 +183,8 @@
         }
     </script>
     <script>
-        var weather_array = []
-        fetch("https://alarms.services.bergwacht-bayern.org").then(response =>
-            response.json().then(json => {
-                weather_array.push(generateStation("Kühroint", "kuehroint", "1420", json));
-                weather_array.push(generateStation("Watzmannhaus", "watzmann", "1928", json));
-                weather_array.push(generateStation("Watzmanngrat", "watzmanngrat", "2635", json));
-                weather_array.push(generateStation("Trischübel", "trischuebel", "1764", json));
-                weather_array.push(generateStation("Brunftbergtiefe", "brunftbergtiefe", "1240", json));
-                weather_array.push(generateStation("Blaueis", "blaueishuette", "1650", json));
-                weather_array.push(generateStation("Hinterberghorn", "hinterberghorn", "2493", json));
-                weather_array.push(generateStation("Hinterseeau", "hinterseeau", "830", json));
-
+        fetch("https://new-weather.services.bergwacht-bayern.org/?lat=47.6075&lon=12.8964").then(response =>
+            response.json().then(weather_array => {
                 var table = document.getElementById('weather');
 
                 for (var i = 0; i < weather_array.length; i++) {
@@ -205,9 +195,9 @@
                         cell.innerHTML = weather_array[i]['name'];
                         var cell = row.insertCell(- 1); // -1 is insert as last
                         cell.className = 'Altitude'; //
-                        cell.innerHTML = weather_array[i]['height'];
+                        cell.innerHTML = weather_array[i]['elevation'];
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const time = weather_array[i]['time'];
+                        const time = parseDate(weather_array[i]['time']);
                         const date15Minutes = new Date(Date.now() - (1000 * 60 * 15));
                         if (date15Minutes > time) {
                             cell.className = 'Time red'; //
@@ -215,9 +205,9 @@
                             cell.className = 'Time'; //
                         }
                         const options = { hour: '2-digit', minute: '2-digit' };
-                        cell.innerHTML = weather_array[i]['time'].toLocaleString('de-DE', options);
+                        cell.innerHTML = time.toLocaleString('de-DE', options);
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const lt = weather_array[i]['temp'];
+                        const lt = weather_array[i]['values']['temperature']['value'];
                         if (lt < 3.0) {
                             cell.className = 'LT blue'; //
                         } else if (lt > 25.0) {
@@ -228,7 +218,7 @@
                         }
                         cell.innerHTML = lt;
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const wg = Math.round(weather_array[i]['wind'] * 3.6);
+                        const wg = Math.round(weather_array[i]['values']['wind']['value'] * 3.6);
                         if (wg >= 50) {
                             cell.className = 'WG red'; //
                         }
@@ -237,12 +227,12 @@
                         } else {
                             cell.className = 'WG'; //
                         }
-                        cell.innerHTML = roundWind(weather_array[i]['wind']);
+                        cell.innerHTML = roundWind(weather_array[i]['values']['wind']['value']);
                         cell = row.insertCell(- 1); // -1 is insert as last
                         cell.className = 'WR'; //
-                        cell.innerHTML = getDirection(weather_array[i]['direction']);
+                        cell.innerHTML = weather_array[i]['values']['windDirection']['value'];
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const wgBoe = Math.round(weather_array[i]['wind_boe'] * 3.6);
+                        const wgBoe = Math.round(weather_array[i]['values']['gust']['value'] * 3.6);
                         if (wgBoe >= 50) {
                             cell.className = 'WG_BOE red'; //
                         }
@@ -251,25 +241,23 @@
                         } else {
                             cell.className = 'WG_BOE'; //
                         }
-                        cell.innerHTML = roundWind(weather_array[i]['wind_boe']);
-                        //cell = row.insertCell(- 1); // -1 is insert as last
-                        //cell.className = 'HS'; //
-                        //cell.innerHTML = roundToFive(weather_array[i]['snow']);
-                        //cell = row.insertCell(- 1); // -1 is insert as last
-                        //if (Math.round(weather_array[i]['snow_delta'] / 5) * 5 > 0) {
-                        //    cell.className = 'HSD24 warning'; //
-                        //} else {
-                        //    cell.className = 'HSD24'; //
-                        //}
-                        //cell.innerHTML = roundToFive(weather_array[i]['snow_delta']);
+                        cell.innerHTML = roundWind(weather_array[i]['values']['gust']['value']);
+                        cell = row.insertCell(- 1); // -1 is insert as last
+                        cell.className = 'HS'; //
+                        cell.innerHTML = roundToFive(weather_array[i]['values']['snow']['value']);
                     }
                 }
             }
             )
         )
 
+        function parseDate(str_date) {
+            let date = new Date(Date.parse(str_date));
+            return date;
+        }
+
         function roundWind(x) {
-            if (isNaN(x)) {
+            if (!x) {
                 return '-';
             }
             if (x < 0) {
@@ -278,39 +266,8 @@
             return Math.round(x * 3.6);
         }
 
-        function getDirection(x) {
-            if (isNaN(x)) {
-                return '-';
-            }
-            if (x > 337 || x < 23) {
-                return 'N'
-            }
-            if (x > 22 && x < 68) {
-                return 'NO'
-            }
-            if (x > 67 && x < 113) {
-                return 'O'
-            }
-            if (x > 112 && x < 158) {
-                return 'SO'
-            }
-            if (x > 157 && x < 203) {
-                return 'S'
-            }
-            if (x > 202 && x < 248) {
-                return 'SW'
-            }
-            if (x > 247 && x < 293) {
-                return 'W'
-            }
-            if (x > 292 && x < 338) {
-                return 'NW'
-            }
-            return '-'
-        }
-
         function roundToFive(x) {
-            if (isNaN(x)) {
+            if (!x) {
                 return '-';
             }
             if (x < 0) {
@@ -318,60 +275,9 @@
             }
             return Math.round(x / 5) * 5;
         }
-
-        function generateStation(nameMDS, nameLWD, height, json) {
-            temp = json[nameMDS]["values"][height].find(value => value.name == "Lufttemperatur") ? parseFloat(json[nameMDS]["values"][height].find(value => value.name == "Lufttemperatur")["value"]) : NaN;
-            wind = json[nameMDS]["values"][height].find(value => value.name == "Windgeschwindigkeit") ? parseFloat(json[nameMDS]["values"][height].find(value => value.name == "Windgeschwindigkeit")["value"]) : NaN;
-            direction = json[nameMDS]["values"][height].find(value => value.name == "Windrichtung") ? parseInt(json[nameMDS]["values"][height].find(value => value.name == "Windrichtung")["value"]) : NaN;
-            wind_boe = json[nameMDS]["values"][height].find(value => value.name == "Windböe") ? parseFloat(json[nameMDS]["values"][height].find(value => value.name == "Windböe")["value"]) : NaN;
-            snow = json[nameMDS]["values"][height].find(value => value.name == "Schneehöhe") ? parseFloat(json[nameMDS]["values"][height].find(value => value.name == "Schneehöhe")["value"]) : NaN;
-            time = generateDate(json[nameMDS]["time"]);
-            if (new Date(Date.now() - (1000 * 60 * 60)) > time) {
-                return null;
-            }
-            return {
-                "name": nameMDS,
-                "height": height,
-                "time": time,
-                "temp": temp,
-                "wind": wind,
-                "direction": direction,
-                "wind_boe": wind_boe,
-                "snow": snow,
-                //"snow_delta": stationData['DE-BY-01 Berchtesgadener Alpen'].find(station => station.name === nameLWD)['measuredData']['values']['HSD24']
-            }
-        }
-
-        function generateDate(dateTimeString) {
-            const dateTimeArray = dateTimeString.split(' ');
-            const day = dateTimeArray[0].replace('.', '');
-            const month = generateMonth(dateTimeArray[1]);
-            const year = dateTimeArray[2];
-            const hour = dateTimeArray[3].split(':')[0];
-            const minute = dateTimeArray[3].split(':')[1];
-            return new Date(year, month, day, (parseInt(hour) + 1), minute, 0, 0);
-        }
-
-        function generateMonth(monthString) {
-            switch (monthString) {
-                case 'Jan': return 0;
-                case 'Feb': return 1;
-                case 'Mär': return 2;
-                case 'Apr': return 3;
-                case 'Mai': return 4;
-                case 'Jun': return 5;
-                case 'Jul': return 6;
-                case 'Aug': return 7;
-                case 'Sep': return 8;
-                case 'Okt': return 9;
-                case 'Nov': return 10;
-                case 'Dez': return 11;
-            }
-        }
-
     </script>
     <script>
-        fetch("https://alarms.services.bergwacht-bayern.org/warnings?lat=47.6075&lon=12.8964&level=3").then(response =>
+        fetch("https://alarms.services.bergwacht-bayern.org/?lat=47.6075&lon=12.8964&level=3").then(response =>
             response.json().then(json => {
 
                 var element = document.getElementById('warnings');
