@@ -12,7 +12,7 @@
         }
 
         body {
-            width: 820px;
+            width: 920px;
             font-family: Verdana, sans-serif;
             font-size: 1.5em;
             margin: 0.5em;
@@ -157,14 +157,14 @@
         <table id="weather">
             <tr>
                 <th width="240px" class='name'>Name</th>
-                <th width="120px">Höhe</th>
-                <th width="120px">Uhrzeit</th>
+                <th width="100px">Höhe</th>
+                <th width="100px">Uhrzeit</th>
                 <th width="80px"><img src="resources/temp.png" alt="Temp °C" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/wind.png" alt="Wind km/h" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/direction.png" alt="Richtung" height="64px" width="64px"></th>
                 <th width="80px"><img src="resources/boe.png" alt="Böe km/h" height="64px" width="64px"></th>
-                <!--<th width="80px"><img src="resources/snow.png" alt="HS cm" height="64px" width="64px"></th>-->
-                <!--<th width="80px"><img src="resources/deltasnow.png" alt="HS/24h cm" height="64px" width="64px"></th>-->
+                <th width="80px"><img src="resources/snow.png" alt="HS cm" height="64px" width="64px"></th>
+                <th width="80px"><img src="resources/deltasnow.png" alt="HS/24h cm" height="64px" width="64px"></th>
             </tr>
         </table>
         <div id="avalanche" class="avalanche hidden">
@@ -218,7 +218,7 @@
                         }
                         cell.innerHTML = lt;
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const wg = Math.round(weather_array[i]['values']['wind']['value'] * 3.6);
+                        const wg = weather_array[i]['values']['wind']['value'];
                         if (wg >= 50) {
                             cell.className = 'WG red'; //
                         }
@@ -227,12 +227,12 @@
                         } else {
                             cell.className = 'WG'; //
                         }
-                        cell.innerHTML = roundWind(weather_array[i]['values']['wind']['value']);
+                        cell.innerHTML = wg ?? "-";
                         cell = row.insertCell(- 1); // -1 is insert as last
                         cell.className = 'WR'; //
-                        cell.innerHTML = weather_array[i]['values']['windDirection']['value'];
+                        cell.innerHTML = weather_array[i]['values']['windDirection']['value'] ?? "-";
                         cell = row.insertCell(- 1); // -1 is insert as last
-                        const wgBoe = Math.round(weather_array[i]['values']['gust']['value'] * 3.6);
+                        const wgBoe = weather_array[i]['values']['gust']['value'];
                         if (wgBoe >= 50) {
                             cell.className = 'WG_BOE red'; //
                         }
@@ -241,10 +241,13 @@
                         } else {
                             cell.className = 'WG_BOE'; //
                         }
-                        cell.innerHTML = roundWind(weather_array[i]['values']['gust']['value']);
+                        cell.innerHTML = wgBoe ?? "-";
                         cell = row.insertCell(- 1); // -1 is insert as last
                         cell.className = 'HS'; //
-                        cell.innerHTML = roundToFive(weather_array[i]['values']['snow']['value']);
+                        cell.innerHTML = weather_array[i]['values']['snow']['value'] ?? "-";
+                        cell = row.insertCell(- 1); // -1 is insert as last
+                        cell.className = 'HS24'; //
+                        cell.innerHTML = weather_array[i]['values']['snowDelta']['value'] ?? "-";
                     }
                 }
             }
@@ -254,26 +257,6 @@
         function parseDate(str_date) {
             let date = new Date(Date.parse(str_date));
             return date;
-        }
-
-        function roundWind(x) {
-            if (!x) {
-                return '-';
-            }
-            if (x < 0) {
-                return 0;
-            }
-            return Math.round(x * 3.6);
-        }
-
-        function roundToFive(x) {
-            if (!x) {
-                return '-';
-            }
-            if (x < 0) {
-                return 0;
-            }
-            return Math.round(x / 5) * 5;
         }
     </script>
     <script>
