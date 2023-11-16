@@ -260,63 +260,65 @@
         }
     </script>
     <script>
-        fetch("https://alarms.services.bergwacht-bayern.org/?lat=47.6075&lon=12.8964&level=3").then(response =>
+        fetch("https://api.brightsky.dev/alerts?lat=47.6075&lon=12.8964").then(response =>
             response.json().then(json => {
 
+                let alerts = json.alerts.filter(alert => alert.severity === "moderate" || alert.severity === "severe" || alert.severity === "extreme")
+
                 var element = document.getElementById('warnings');
-                if (json.length === 0) {
+                if (alerts.length === 0) {
                     var para = document.createElement("p");
                     var node = document.createTextNode("Aktuell keine Unwetterwarnungen");
                     para.appendChild(node);
                     element.appendChild(para);
                 } else {
-                    for (var i = 0; i < json.length; i++) {
+                    for (var i = 0; i < alerts.length; i++) {
                         var container = document.createElement("div");
                         container.className = "warningContainer";
                         var para = document.createElement("p");
-                        if (json[i]['level'] == 2) {
+                        if (alerts[i]['severity'] == "minor") {
                             para.className = "yellow warningName";
-                        } else if (json[i]['level'] == 3) {
+                        } else if (alerts[i]['severity'] == "moderate") {
                             para.className = "warning warningName";
-                        } else if (json[i]['level'] == 4) {
+                        } else if (alerts[i]['severity'] == "severe") {
                             para.className = "red warningName"
-                        } else if (json[i]['level'] == 5) {
+                        } else if (alerts[i]['severity'] == "extreme") {
                             para.className = "violet warningName"
                         }
-                        var node = document.createTextNode(json[i]['name']);
+                        var node = document.createTextNode(alerts[i]['headline_de']);
                         para.appendChild(node);
                         container.appendChild(para);
-                        const startDate = new Date(json[i]['start']);
-                        const endDate = new Date(json[i]['end']);
+                        const startDate = new Date(alerts[i]['onset']);
+                        const endDate = new Date(alerts[i]['expires']);
                         para = document.createElement("p");
-                        if (json[i]['level'] == 2) {
+                        if (alerts[i]['severity'] == "minor") {
                             para.className = "yellow warningDesc";
-                        } else if (json[i]['level'] == 3) {
+                        } else if (alerts[i]['severity'] == "moderate") {
                             para.className = "warning warningDesc";
-                        } else if (json[i]['level'] == 4) {
+                        } else if (alerts[i]['severity'] == "severe") {
                             para.className = "red warningDesc"
-                        } else if (json[i]['level'] == 5) {
+                        } else if (alerts[i]['severity'] == "extreme") {
                             para.className = "violet warningDesc"
                         }
                         node = document.createTextNode(startDate.toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + ' Uhr bis ' + endDate.toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + ' Uhr');
                         para.appendChild(node);
                         container.appendChild(para);
                         para = document.createElement("p");
-                        if (json[i]['level'] == 2) {
+                        if (alerts[i]['severity'] == "minor") {
                             para.className = "yellow warningDesc";
-                        } else if (json[i]['level'] == 3) {
+                        } else if (alerts[i]['severity'] == "moderate") {
                             para.className = "warning warningDesc";
-                        } else if (json[i]['level'] == 4) {
+                        } else if (alerts[i]['severity'] == "severe") {
                             para.className = "red warningDesc"
-                        } else if (json[i]['level'] == 5) {
+                        } else if (alerts[i]['severity'] == "extreme") {
                             para.className = "violet warningDesc"
                         }
-                        node = document.createTextNode(json[i]['description']);
+                        node = document.createTextNode(alerts[i]['description_de']);
                         para.appendChild(node);
                         container.appendChild(para);
                         para = document.createElement("p");
                         para.className = "warningCount";
-                        node = document.createTextNode((i + 1) + " / " + json.length);
+                        node = document.createTextNode((i + 1) + " / " + alerts.length);
                         para.appendChild(node);
                         container.appendChild(para);
                         element.appendChild(container);
